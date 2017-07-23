@@ -1,4 +1,5 @@
 # Binaries and project files
+ignore/
 bin/
 .settings/
 export/

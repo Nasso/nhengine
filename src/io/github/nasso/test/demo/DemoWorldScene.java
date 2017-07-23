@@ -70,10 +70,10 @@ public class DemoWorldScene extends Scene {
 		
 		try {
 			// On charge le tileset des tiles basiques...
-			this.basicTiles = TextureIO.loadTexture2D("res/textures/basictiles.png", 4);
+			this.basicTiles = TextureIO.loadTexture2D("res/demo/textures/basictiles.png", 4, false, false, false, true);
 			
 			// ...et des characters
-			this.characterTiles = TextureIO.loadTexture2D("res/textures/cyber_kid.png", 4);
+			this.characterTiles = TextureIO.loadTexture2D("res/demo/textures/cyber_kid.png", 4, false, false, false, true);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

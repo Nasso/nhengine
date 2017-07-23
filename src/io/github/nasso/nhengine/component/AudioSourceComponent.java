@@ -9,6 +9,11 @@ import io.github.nasso.nhengine.level.Component;
  * @author nasso
  */
 public class AudioSourceComponent extends Component {
+	/**
+	 * An enumeration of the different states an audio source can be.
+	 * 
+	 * @author nasso
+	 */
 	public enum Status {
 		PLAYING, PAUSING, PAUSED, STOPPING, STOPPED, RESTARTING
 	}
@@ -24,6 +29,12 @@ public class AudioSourceComponent extends Component {
 	
 	private int version = 0;
 	
+	/**
+	 * 
+	 * 
+	 * @param time
+	 * @param pitch
+	 */
 	public void play(float time, float pitch) {
 		if(this.soundBuffer != null) this.status = (this.status == Status.PLAYING ? Status.RESTARTING : Status.PLAYING);
 		this.version++;
