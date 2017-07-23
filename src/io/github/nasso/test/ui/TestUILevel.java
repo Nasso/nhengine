@@ -170,7 +170,7 @@ public class TestUILevel extends Level {
 	
 	private Texture2D loadImage(CharSequence name) {
 		try {
-			return TextureIO.loadTexture2D("res/images/" + name, 4, false, true, true);
+			return TextureIO.loadTexture2D("res/demo/images/" + name, 4, false, true, true, true);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

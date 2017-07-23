@@ -41,11 +41,11 @@ public class TestCanvasSketch {
 		// @format:on
 		
 		try {
-			this.lorem = Nhutils.readFile("res/lorem.txt", false);
+			this.lorem = Nhutils.readFile("res/demo/lorem.txt", true);
 			this.fnt = new TrueTypeFont("res/fonts/Ubuntu-R.ttf", 18, false, true);
 			this.emojiFnt = new TrueTypeFont("res/fonts/NotoEmoji-Regular.ttf", 48, false, true);
 			
-			this.img = TextureIO.loadTexture2D("res/images/image1.jpg");
+			this.img = TextureIO.loadTexture2D("res/demo/images/image1.jpg", 4, false, false, false, true);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
