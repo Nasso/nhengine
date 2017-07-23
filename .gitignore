@@ -9,7 +9,7 @@ export/
 *.log
 
 # Local resources
-res/
+/res/
 
 # Package Files #
 *.jar
