@@ -13,7 +13,7 @@ import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Node;
 import io.github.nasso.nhengine.level.Scene;
 
-public class OALPlayer extends AudioPlayer {
+public class OALPlayer implements AudioPlayer {
 	public static final int QUICK_SOURCES_COUNT = 8;
 	
 	private OALSource[] quickSources = new OALSource[QUICK_SOURCES_COUNT];

@@ -23,7 +23,7 @@ import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Node;
 import io.github.nasso.nhengine.level.Scene;
 
-public class OGLMasterRenderer extends Renderer {
+public class OGLRenderer extends Renderer {
 	private OGLSpriteRenderer spriteRenderer;
 	private OGLCanvasRenderer canvasRenderer;
 	
@@ -37,7 +37,7 @@ public class OGLMasterRenderer extends Renderer {
 	private SpriteComponent[] sprite_instancesList = new SpriteComponent[OGLSpriteRenderer.MAX_INSTANCES];
 	private float[] sprite_gridXYPositionOffset = new float[OGLSpriteRenderer.MAX_INSTANCES * 2];
 	
-	public OGLMasterRenderer(int width, int height) throws IOException {
+	public OGLRenderer(int width, int height) throws IOException {
 		super(width, height);
 		
 		this.painterSort = (a, b) -> {

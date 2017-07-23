@@ -9,8 +9,10 @@ import io.github.nasso.nhengine.audio.AudioPlayer;
 import io.github.nasso.nhengine.graphics.Renderer;
 import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Scene;
+import io.github.nasso.nhengine.openal.OALPlayer;
 import io.github.nasso.nhengine.openal.OALManager;
 import io.github.nasso.nhengine.opengl.OGLManager;
+import io.github.nasso.nhengine.opengl.OGLRenderer;
 import io.github.nasso.nhengine.utils.TimeManager;
 
 public class Game {
@@ -23,8 +25,8 @@ public class Game {
 	private GameWindow window;
 	private GameRunner runner;
 	
-	private Renderer renderer;
-	private AudioPlayer audioPlayer;
+	private OGLRenderer renderer;
+	private OALPlayer audioPlayer;
 	private Level currentLevel;
 	
 	private float frameTime = 0;

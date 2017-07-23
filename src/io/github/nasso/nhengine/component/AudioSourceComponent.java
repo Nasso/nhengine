@@ -3,6 +3,11 @@ package io.github.nasso.nhengine.component;
 import io.github.nasso.nhengine.audio.Sound;
 import io.github.nasso.nhengine.level.Component;
 
+/**
+ * A component that can be used as an audio source. It can be modelised as a single point, emitting audio in all directions.
+ * 
+ * @author nasso
+ */
 public class AudioSourceComponent extends Component {
 	public enum Status {
 		PLAYING, PAUSING, PAUSED, STOPPING, STOPPED, RESTARTING

@@ -24,7 +24,7 @@ public class OGLManager {
 	public final int maxCombinedTextureImageUnits;
 	public final int maxFragmentTextureImageUnits;
 	
-	public final OGLMasterRenderer renderer;
+	public final OGLRenderer renderer;
 	
 	public OGLManager(LaunchSettings settings) throws IOException {
 		GL.createCapabilities();
@@ -35,7 +35,7 @@ public class OGLManager {
 		this.maxFragmentTextureImageUnits = GL11.glGetInteger(GL20.GL_MAX_TEXTURE_IMAGE_UNITS);
 		System.out.println("[OGLManager] " + this.maxFragmentTextureImageUnits + " max texture units (fragment)");
 		
-		this.renderer = new OGLMasterRenderer(settings.getVideoWidth(), settings.getVideoHeight());
+		this.renderer = new OGLRenderer(settings.getVideoWidth(), settings.getVideoHeight());
 	}
 	
 	private void disposeInst() {

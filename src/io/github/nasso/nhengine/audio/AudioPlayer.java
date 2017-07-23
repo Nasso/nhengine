@@ -1,13 +1,38 @@
 package io.github.nasso.nhengine.audio;
 
-import io.github.nasso.nhengine.level.Level;
-
-public abstract class AudioPlayer {
-	public abstract void audioStep(Level lvl);
+/**
+ * An interface representing an audio player. An <code>AudioPlayer</code> provides methods to play <code>Sound</code> objects globally (like a music).
+ * 
+ * @author nasso
+ */
+public interface AudioPlayer {
+	/**
+	 * Plays the given sound with the given parameters.
+	 * 
+	 * @param snd
+	 *            The sound to play
+	 * @param volume
+	 *            The volume
+	 * @param pitch
+	 *            The pitch
+	 */
+	public void playSound(Sound snd, float volume, float pitch);
 	
-	public abstract void playSound(Sound snd, float volume, float pitch);
+	/**
+	 * Plays the given sound with the given parameters.
+	 * 
+	 * @param snd
+	 *            The sound to play
+	 * @param volume
+	 *            The volume
+	 */
+	public void playSound(Sound snd, float volume);
 	
-	public abstract void playSound(Sound snd, float volume);
-	
-	public abstract void playSound(Sound snd);
+	/**
+	 * Plays the given sound with the given parameters.
+	 * 
+	 * @param snd
+	 *            The sound to play
+	 */
+	public void playSound(Sound snd);
 }
