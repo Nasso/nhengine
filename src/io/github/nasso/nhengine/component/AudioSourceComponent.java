@@ -30,34 +30,55 @@ public class AudioSourceComponent extends Component {
 	private int version = 0;
 	
 	/**
-	 * 
+	 * Plays the current sound.
 	 * 
 	 * @param time
+	 *            The start time in seconds
 	 * @param pitch
+	 *            The pitch
 	 */
 	public void play(float time, float pitch) {
 		if(this.soundBuffer != null) this.status = (this.status == Status.PLAYING ? Status.RESTARTING : Status.PLAYING);
 		this.version++;
 	}
 	
+	/**
+	 * Plays the current sound with a normal pitch.
+	 * 
+	 * @param time
+	 *            The start time in seconds
+	 */
 	public void play(float time) {
 		this.play(time, 1);
 	}
 	
+	/**
+	 * Plays the current sound from the beginning, with a normal pitch.
+	 */
 	public void play() {
 		this.play(0);
 	}
 	
+	/**
+	 * Pauses
+	 */
 	public void pause() {
 		if(this.soundBuffer != null) this.status = Status.PAUSING;
 		this.version++;
 	}
 	
+	/**
+	 * Stops
+	 */
 	public void stop() {
 		this.status = Status.STOPPING;
 		this.version++;
 	}
 	
+	/**
+	 * 
+	 * @param pitch
+	 */
 	public void setPitch(float pitch) {
 		if(this.pitch == pitch) return;
 		
