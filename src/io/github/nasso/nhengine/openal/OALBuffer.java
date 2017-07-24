@@ -11,6 +11,7 @@ public class OALBuffer {
 	private int bits;
 	private int channels;
 	private int size;
+	private int sampleSize;
 	private ByteBuffer data;
 	
 	public OALBuffer() {
@@ -20,6 +21,7 @@ public class OALBuffer {
 		this.bits = alGetBufferi(this.id, AL_BITS);
 		this.channels = alGetBufferi(this.id, AL_CHANNELS);
 		this.size = alGetBufferi(this.id, AL_SIZE);
+		this.sampleSize = 0;
 	}
 	
 	public boolean isValid() {
@@ -47,6 +49,10 @@ public class OALBuffer {
 		return this.size;
 	}
 	
+	public int getSampleSize() {
+		return this.sampleSize;
+	}
+	
 	public ByteBuffer getData() {
 		return this.data;
 	}
@@ -59,5 +65,7 @@ public class OALBuffer {
 		this.bits = alGetBufferi(this.id, AL_BITS);
 		this.channels = alGetBufferi(this.id, AL_CHANNELS);
 		this.size = alGetBufferi(this.id, AL_SIZE);
+		this.sampleSize = this.size / this.channels;
+		if(this.bits == 16) this.sampleSize /= 2;
 	}
 }

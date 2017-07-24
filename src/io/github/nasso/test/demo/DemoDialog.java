@@ -29,8 +29,6 @@ public class DemoDialog {
 	public static final char MACRO_LINE_SEPARATOR = '&';
 	public static final char MACRO_HEART_POINT = '#';
 	
-	// public static final TextComponent.TextEffect TEXT_EFFECT_SHAKING = new TextComponent.ShakingTextEffect(0.7f, 1f);
-	// public static final TextComponent.TextEffect TEXT_EFFECT_TENSION = new TextComponent.ShakingTextEffect(1.2f, 0.02f);
 	public static final int TEXT_EFFECT_NONE = 0;
 	public static final int TEXT_EFFECT_SHAKING = 1;
 	public static final int TEXT_EFFECT_TENSION = 2;

@@ -1,6 +1,8 @@
 package io.github.nasso.nhengine.openal;
 
+import static java.lang.Math.*;
 import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.AL11.*;
 
 import org.joml.Vector3f;
 
@@ -126,6 +128,16 @@ public class OALSource {
 		
 		if(buffer != null) alSourcei(this.id, AL_BUFFER, buffer.id);
 		else alSourcei(this.id, AL_BUFFER, 0);
+		
+		this.setCurrentTime(0);
+	}
+	
+	public void setCurrentTime(float currentTime) {
+		if(this.buffer != null) alSourcei(this.id, AL_SAMPLE_OFFSET, (int) min(this.buffer.getFrequency() * currentTime, this.buffer.getSampleSize()));
+	}
+	
+	public float getCurrentTime() {
+		return (float) alGetSourcei(this.id, AL_SAMPLE_OFFSET) / this.buffer.getFrequency();
 	}
 	
 	public int getID() {

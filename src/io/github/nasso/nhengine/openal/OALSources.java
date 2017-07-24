@@ -65,7 +65,8 @@ public class OALSources {
 			oalSrc.setMinGain(src.getMinGain());
 			oalSrc.setMaxGain(src.getMaxGain());
 			oalSrc.setLooping(src.isLooping());
-			oalSrc.setBuffer(OALBuffers.get().get(src.getSoundBuffer()));
+			oalSrc.setCurrentTime(src.getCurrentTime());
+			oalSrc.setBuffer(OALBuffers.get().get(src.getSound()));
 			
 			switch(src.getStatus()) {
 				case PAUSING:

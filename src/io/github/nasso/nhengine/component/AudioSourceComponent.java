@@ -18,9 +18,10 @@ public class AudioSourceComponent extends Component {
 		PLAYING, PAUSING, PAUSED, STOPPING, STOPPED, RESTARTING
 	}
 	
-	private Sound soundBuffer;
+	private Sound sound;
 	private Status status = Status.STOPPED;
 	
+	private float currentTime = 0;
 	private float pitch = 1;
 	private float gain = 1;
 	private float minGain = 0;
@@ -30,7 +31,14 @@ public class AudioSourceComponent extends Component {
 	private int version = 0;
 	
 	/**
-	 * Plays the current sound.
+	 * Plays the sound.
+	 * Equivalent to:<br>
+	 * 
+	 * <pre>
+	 * src.setCurrentTime(time);
+	 * src.setPitch(pitch);
+	 * src.play();
+	 * </pre>
 	 * 
 	 * @param time
 	 *            The start time in seconds
@@ -38,32 +46,41 @@ public class AudioSourceComponent extends Component {
 	 *            The pitch
 	 */
 	public void play(float time, float pitch) {
-		if(this.soundBuffer != null) this.status = (this.status == Status.PLAYING ? Status.RESTARTING : Status.PLAYING);
-		this.version++;
+		this.setCurrentTime(time);
+		this.setPitch(pitch);
+		this.play();
 	}
 	
 	/**
-	 * Plays the current sound with a normal pitch.
+	 * Plays the current sound with a normal pitch.<br>
+	 * Equivalent to:
+	 * 
+	 * <pre>
+	 * src.setCurrentTime(time);
+	 * src.play();
+	 * </pre>
 	 * 
 	 * @param time
 	 *            The start time in seconds
 	 */
 	public void play(float time) {
-		this.play(time, 1);
+		this.setCurrentTime(time);
+		this.play();
 	}
 	
 	/**
-	 * Plays the current sound from the beginning, with a normal pitch.
+	 * Plays the sound, starting from the current time, with the current pitch.
 	 */
 	public void play() {
-		this.play(0);
+		if(this.sound != null) this.status = (this.status == Status.PLAYING ? Status.RESTARTING : Status.PLAYING);
+		this.version++;
 	}
 	
 	/**
 	 * Pauses
 	 */
 	public void pause() {
-		if(this.soundBuffer != null) this.status = Status.PAUSING;
+		if(this.sound != null) this.status = Status.PAUSING;
 		this.version++;
 	}
 	
@@ -76,6 +93,7 @@ public class AudioSourceComponent extends Component {
 	}
 	
 	/**
+	 * Sets the pitch. Changes will take effect the next time the sound is played.
 	 * 
 	 * @param pitch
 	 */
@@ -86,31 +104,50 @@ public class AudioSourceComponent extends Component {
 		this.version++;
 	}
 	
+	/**
+	 * @return The current pitch
+	 */
 	public float getPitch() {
 		return this.pitch;
 	}
 	
 	/**
-	 * Called by the audio backend, DO NOT CALL BY YOURSELF
+	 * Called by the audio backend, the client shouldn't call it.
 	 */
 	public void setStatus(Status stat) {
 		this.status = stat;
 	}
 	
+	/**
+	 * @return The current status of the audio source.
+	 */
 	public Status getStatus() {
 		return this.status;
 	}
 	
-	public Sound getSoundBuffer() {
-		return this.soundBuffer;
+	/**
+	 * @return Return the current sound.
+	 */
+	public Sound getSound() {
+		return this.sound;
 	}
 	
-	public void setSoundBuffer(Sound soundBuffer) {
-		this.soundBuffer = soundBuffer;
+	/**
+	 * Sets the current sound to be played using this audio source.
+	 * 
+	 * @param sound
+	 */
+	public void setSound(Sound sound) {
+		this.sound = sound;
 		this.status = Status.STOPPING;
 		this.version++;
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @return The current version of the audio source.
+	 */
 	public int getVersion() {
 		return this.version;
 	}
@@ -161,5 +198,13 @@ public class AudioSourceComponent extends Component {
 		
 		this.looping = looping;
 		this.version++;
+	}
+	
+	public float getCurrentTime() {
+		return this.currentTime;
+	}
+	
+	public void setCurrentTime(float currentTime) {
+		this.currentTime = currentTime;
 	}
 }
