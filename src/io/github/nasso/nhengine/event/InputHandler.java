@@ -3,11 +3,11 @@ package io.github.nasso.nhengine.event;
 public interface InputHandler {
 	public void textInput(int codepoint);
 	
-	public void keyPressed(int key, int scancode);
+	public void keyPressed(int key);
 	
-	public void keyTyped(int key, int scancode);
+	public void keyTyped(int key);
 	
-	public void keyReleased(int key, int scancode);
+	public void keyReleased(int key);
 	
 	public void mouseButtonPressed(float x, float y, int btn);
 	

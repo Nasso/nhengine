@@ -168,16 +168,16 @@ public class UICanvas extends Node implements InputComponentEventHandler {
 		if(this.focusComponent != null) this.focusComponent.textInput(codepoint);
 	}
 	
-	public void keyPressed(int key, int scancode) {
-		if(this.focusComponent != null) this.focusComponent.keyPressed(key, scancode);
+	public void keyPressed(int key) {
+		if(this.focusComponent != null) this.focusComponent.keyPressed(key);
 	}
 	
-	public void keyTyped(int key, int scancode) {
-		if(this.focusComponent != null) this.focusComponent.keyTyped(key, scancode);
+	public void keyTyped(int key) {
+		if(this.focusComponent != null) this.focusComponent.keyTyped(key);
 	}
 	
-	public void keyReleased(int key, int scancode) {
-		if(this.focusComponent != null) this.focusComponent.keyReleased(key, scancode);
+	public void keyReleased(int key) {
+		if(this.focusComponent != null) this.focusComponent.keyReleased(key);
 	}
 	
 	public void mouseButtonPressed(float x, float y, int btn) {

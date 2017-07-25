@@ -9,8 +9,8 @@ import io.github.nasso.nhengine.audio.AudioPlayer;
 import io.github.nasso.nhengine.graphics.Renderer;
 import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Scene;
-import io.github.nasso.nhengine.openal.OALPlayer;
 import io.github.nasso.nhengine.openal.OALManager;
+import io.github.nasso.nhengine.openal.OALPlayer;
 import io.github.nasso.nhengine.opengl.OGLManager;
 import io.github.nasso.nhengine.opengl.OGLRenderer;
 import io.github.nasso.nhengine.utils.TimeManager;
@@ -25,6 +25,7 @@ public class Game {
 	private GameWindow window;
 	private GameRunner runner;
 	
+	private InputManager inputManager = new InputManager();
 	private OGLRenderer renderer;
 	private OALPlayer audioPlayer;
 	private Level currentLevel;
@@ -146,6 +147,7 @@ public class Game {
 						if(s.getRoot().isEnabled()) s.update(delta);
 					}
 					
+					this.inputManager.processInput(this.currentLevel);
 					if(!this.window.isMinified()) this.renderer.render(this.currentLevel);
 					this.audioPlayer.audioStep(this.currentLevel);
 				}

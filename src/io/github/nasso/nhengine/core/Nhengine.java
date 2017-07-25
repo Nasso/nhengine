@@ -388,8 +388,8 @@ public class Nhengine {
 	 *
 	 * @return the UTF-8 encoded, layout-specific name of the key, or {@code NULL}
 	 */
-	public static final String getKeyName(int key, int scancode) {
-		return GLFW.glfwGetKeyName(key, scancode);
+	public static final String getKeyName(int key) {
+		return GLFW.glfwGetKeyName(key, 0);
 	}
 	
 	// ------------ RENDERING ------------

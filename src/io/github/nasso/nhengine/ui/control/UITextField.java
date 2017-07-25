@@ -148,14 +148,14 @@ public class UITextField extends UITextComponent {
 		this.repaint();
 	}
 	
-	public void keyTyped(int key, int scancode) {
-		this.inputEngine.keyTyped(key, scancode);
+	public void keyTyped(int key) {
+		this.inputEngine.keyTyped(key);
 		this.updateCaret();
 		this.repaint();
 	}
 	
-	public void keyReleased(int key, int scancode) {
-		this.inputEngine.keyReleased(key, scancode);
+	public void keyReleased(int key) {
+		this.inputEngine.keyReleased(key);
 		this.updateCaret();
 		this.repaint();
 	}

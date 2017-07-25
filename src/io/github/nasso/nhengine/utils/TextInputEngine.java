@@ -6,7 +6,7 @@ import io.github.nasso.nhengine.core.Nhengine;
 
 /**
  * 
- * @author nasso (<a href="https://github.com/Nasso">GitHub</a>)
+ * @author nasso
  */
 public class TextInputEngine {
 	private boolean multiline = false;
@@ -108,7 +108,7 @@ public class TextInputEngine {
 		this.selectionPoint = this.caretPosition;
 	}
 	
-	public void keyTyped(int key, int scancode) {
+	public void keyTyped(int key) {
 		switch(key) {
 			case Nhengine.KEY_LEFT_CONTROL:
 			case Nhengine.KEY_RIGHT_CONTROL:
@@ -166,7 +166,7 @@ public class TextInputEngine {
 				break;
 			default:
 				if(this.ctrl) {
-					String str = Nhengine.getKeyName(key, scancode);
+					String str = Nhengine.getKeyName(key);
 					if(str == null || str.length() <= 0) break;
 					
 					char c = str.charAt(0);
@@ -194,7 +194,7 @@ public class TextInputEngine {
 		}
 	}
 	
-	public void keyReleased(int key, int scancode) {
+	public void keyReleased(int key) {
 		switch(key) {
 			case Nhengine.KEY_LEFT_CONTROL:
 			case Nhengine.KEY_RIGHT_CONTROL:

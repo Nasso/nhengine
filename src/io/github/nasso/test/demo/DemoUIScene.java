@@ -28,7 +28,7 @@ public class DemoUIScene extends Scene {
 	public void update(float delta) {
 		GameWindow win = Game.instance().window();
 		
-		if(win.isPressed(Nhengine.KEY_F3)) {
+		if(win.isKeyPressed(Nhengine.KEY_F3)) {
 			this.perfDialog.open(this.cvs.getRootPane());
 		}
 		

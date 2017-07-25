@@ -417,19 +417,19 @@ public class TestUILevel extends Level {
 		}
 		
 		if(!(this.cvs.getFocusComponent() instanceof UITextField)) {
-			if(win.isPressed(Nhengine.KEY_ESCAPE)) {
+			if(win.isKeyPressed(Nhengine.KEY_ESCAPE)) {
 				this.leftPaneTrans.setTargetValue(0);
 			}
 			
-			if(win.isPressed(Nhengine.KEY_R)) {
+			if(win.isKeyPressed(Nhengine.KEY_R)) {
 				this.cvs.repaint();
 			}
 			
-			if(win.isPressed(Nhengine.KEY_P)) {
+			if(win.isKeyPressed(Nhengine.KEY_P)) {
 				this.cvs.getRootPane().repack();
 			}
 			
-			if(win.isPressed(Nhengine.KEY_B)) {
+			if(win.isKeyPressed(Nhengine.KEY_B)) {
 				this.toggleShowBounds.doClick();
 			}
 		}

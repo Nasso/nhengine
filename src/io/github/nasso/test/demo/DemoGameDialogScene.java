@@ -170,14 +170,14 @@ public class DemoGameDialogScene extends Scene {
 	private void updatePage(DialogPage textPage) {
 		GameWindow win = Game.instance().window();
 		
-		this.hasSkipped |= textPage.isSkippable() && win.isPressed(DemoMain.GAME_KEY_RETURN);
+		this.hasSkipped |= textPage.isSkippable() && win.isKeyPressed(DemoMain.GAME_KEY_RETURN);
 		
 		boolean hasDialEnded = this.typeDial(this.page.getText(), this.hasSkipped);
 		this.redraw2D();
 		
 		if(hasDialEnded) {
 			// Dialog end
-			if(win.isPressed(DemoMain.GAME_KEY_ACT)) {
+			if(win.isKeyPressed(DemoMain.GAME_KEY_ACT)) {
 				this.startDialog(textPage.getNext());
 			}
 		}

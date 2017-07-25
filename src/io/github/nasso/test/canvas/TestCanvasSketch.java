@@ -2,8 +2,6 @@ package io.github.nasso.test.canvas;
 
 import java.io.IOException;
 
-import com.vdurmont.emoji.EmojiParser;
-
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.core.GameWindow;
 import io.github.nasso.nhengine.data.ScalableVectorGraphics;
@@ -33,14 +31,8 @@ public class TestCanvasSketch {
 	private CubicBezierEasing easing = new CubicBezierEasing(0.42f, 0.0f, 0.58f, 1.0f);
 	
 	public void setup() {
-		// @format:off
-		this.emojiStr = EmojiParser.parseToUnicode(
-				":grinning::smiley::smile::grin::laughing::sweat_smile::joy::blush:\n"
-				+ ":innocent::wink::relieved::heart_eyes::kissing_heart::kissing::kissing_smiling_eyes:\n"
-				+ ":kissing_closed_eyes::yum::stuck_out_tongue_winking_eye::stuck_out_tongue::sunglasses::smirk:");
-		// @format:on
-		
 		try {
+			this.emojiStr = Nhutils.readFile("res/demo/emojis.txt", true);
 			this.lorem = Nhutils.readFile("res/demo/lorem.txt", true);
 			this.fnt = new TrueTypeFont("res/fonts/Ubuntu-R.ttf", 18, false, true);
 			this.emojiFnt = new TrueTypeFont("res/fonts/NotoEmoji-Regular.ttf", 48, false, true);
