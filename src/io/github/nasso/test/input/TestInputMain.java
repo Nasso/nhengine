@@ -5,7 +5,7 @@ import io.github.nasso.nhengine.component.InputComponent;
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.core.GameRunner;
 import io.github.nasso.nhengine.core.LaunchSettings;
-import io.github.nasso.nhengine.event.InputComponentEventHandler;
+import io.github.nasso.nhengine.event.InputEventHandler;
 import io.github.nasso.nhengine.graphics.GraphicsContext2D;
 import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Node;
@@ -39,7 +39,7 @@ public class TestInputMain implements GameRunner {
 		this.gtx.setStrokeSize(2);
 		this.gtx.strokeRect(0, 0, 100, 200);
 		
-		InputComponent input = new InputComponent(this.cvsWidth, this.cvsHeight, new InputComponentEventHandler() {
+		InputComponent input = new InputComponent(this.cvsWidth, this.cvsHeight, new InputEventHandler() {
 			public void textInput(int codepoint) {
 			}
 			

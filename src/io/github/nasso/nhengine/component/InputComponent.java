@@ -1,18 +1,33 @@
 package io.github.nasso.nhengine.component;
 
 import io.github.nasso.nhengine.core.Nhengine;
-import io.github.nasso.nhengine.event.InputComponentEventHandler;
+import io.github.nasso.nhengine.event.InputEventHandler;
 import io.github.nasso.nhengine.level.Component;
 
+/**
+ * A component that can react to user input. Mouse inputs are trigerred only if they're in the specified rectangle.
+ * 
+ * @author nasso
+ */
 public class InputComponent extends Component {
 	private boolean[] isPressed = new boolean[Nhengine.MOUSE_BUTTON_LAST + 1];
 	
-	private InputComponentEventHandler inputHandler;
+	private InputEventHandler inputHandler;
 	private float inputAreaW, inputAreaH;
 	
 	private boolean mouseHover = false;
 	
-	public InputComponent(float inputAreaWidth, float inputAreaHeight, InputComponentEventHandler handler) {
+	/**
+	 * Constructs an input component with the specified size. The rectangle's top-left corner is at the origin (0; 0) of the component.
+	 * 
+	 * @param inputAreaWidth
+	 *            The input rectangle width
+	 * @param inputAreaHeight
+	 *            The input rectangle height
+	 * @param handler
+	 *            The event handler
+	 */
+	public InputComponent(float inputAreaWidth, float inputAreaHeight, InputEventHandler handler) {
 		this.inputAreaW = inputAreaWidth;
 		this.inputAreaH = inputAreaHeight;
 		this.setInputHandler(handler);
@@ -21,28 +36,28 @@ public class InputComponent extends Component {
 	public void mouseWheelMoved(float x, float y, float scrollX, float scrollY) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		if(handler != null) handler.mouseWheelMoved(x, y, scrollX, scrollY);
 	}
 	
 	public void mouseEntered(float newX, float newY, float relX, float relY) {
 		this.mouseHover = true;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		if(handler != null) handler.mouseEntered(newX, newY, relX, relY);
 	}
 	
 	public void mouseExited(float newX, float newY, float relX, float relY) {
 		this.mouseHover = false;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		if(handler != null) handler.mouseExited(newX, newY, relX, relY);
 	}
 	
 	public void mouseMoved(float newX, float newY, float relX, float relY) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		
 		if(handler != null) {
 			for(int i = 0; i < this.isPressed.length; i++) {
@@ -58,7 +73,7 @@ public class InputComponent extends Component {
 	public void mouseButtonReleased(float x, float y, int btn) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		if(handler != null) {
 			this.isPressed[btn] = false;
 			handler.mouseButtonReleased(x, y, btn);
@@ -68,7 +83,7 @@ public class InputComponent extends Component {
 	public void mouseButtonPressed(float x, float y, int btn) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		
 		if(handler != null) {
 			this.isPressed[btn] = true;
@@ -80,7 +95,7 @@ public class InputComponent extends Component {
 	public void keyReleased(int key) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		
 		if(handler != null) handler.keyReleased(key);
 	}
@@ -88,21 +103,21 @@ public class InputComponent extends Component {
 	public void keyPressed(int key) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		if(handler != null) handler.keyPressed(key);
 	}
 	
 	public void keyTyped(int key) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		if(handler != null) handler.keyTyped(key);
 	}
 	
 	public void textInput(int codepoint) {
 		if(!this.isEnabled()) return;
 		
-		InputComponentEventHandler handler = this.getInputHandler();
+		InputEventHandler handler = this.getInputHandler();
 		
 		if(handler != null) handler.textInput(codepoint);
 	}
@@ -123,11 +138,11 @@ public class InputComponent extends Component {
 		this.inputAreaH = h;
 	}
 	
-	public InputComponentEventHandler getInputHandler() {
+	public InputEventHandler getInputHandler() {
 		return this.inputHandler;
 	}
 	
-	public void setInputHandler(InputComponentEventHandler inputHandler) {
+	public void setInputHandler(InputEventHandler inputHandler) {
 		this.inputHandler = inputHandler;
 	}
 	

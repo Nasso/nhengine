@@ -2,13 +2,13 @@ package io.github.nasso.nhengine.ui;
 
 import io.github.nasso.nhengine.component.CanvasComponent;
 import io.github.nasso.nhengine.component.InputComponent;
-import io.github.nasso.nhengine.event.InputComponentEventHandler;
+import io.github.nasso.nhengine.event.InputEventHandler;
 import io.github.nasso.nhengine.graphics.GraphicsContext2D;
 import io.github.nasso.nhengine.level.Node;
 import io.github.nasso.nhengine.ui.theme.UIDefaultDarkTheme;
 import io.github.nasso.nhengine.ui.theme.UITheme;
 
-public class UICanvas extends Node implements InputComponentEventHandler {
+public class UICanvas extends Node implements InputEventHandler {
 	private CanvasComponent cvs;
 	private InputComponent input;
 	private GraphicsContext2D gtx;
