@@ -1,10 +1,13 @@
 # Binaries and project files
-ignore/
-bin/
+/ignore/
+/bin/
 .settings/
-export/
+/export/
 .project
 .classpath
+
+# Documentation, since it's not complete yet
+/doc/
 
 # Log files
 *.log
