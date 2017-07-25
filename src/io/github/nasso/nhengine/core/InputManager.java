@@ -10,6 +10,7 @@ import io.github.nasso.nhengine.component.InputComponent;
 import io.github.nasso.nhengine.level.Component;
 import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Node;
+import io.github.nasso.nhengine.utils.MathUtils;
 
 public class InputManager {
 	private List<InputComponent> components = new ArrayList<InputComponent>();
@@ -82,12 +83,16 @@ public class InputManager {
 					int y = mouseInputs.get(i++);
 					int button = mouseInputs.get(i++);
 					
+					float tx = this.transformX(x, y, this.invWorld);
+					float ty = this.transformY(x, y, this.invWorld);
+					if(!MathUtils.boxContains(tx, ty, 0, 0, in.getInputAreaWidth(), in.getInputAreaHeight())) continue;
+					
 					switch(action) {
 						case Nhengine.PRESS:
-							in.mouseButtonPressed(x, y, button);
+							in.mouseButtonPressed(tx, ty, button);
 							break;
 						case Nhengine.RELEASE:
-							in.mouseButtonReleased(x, y, button);
+							in.mouseButtonReleased(tx, ty, button);
 							break;
 					}
 				}
@@ -96,11 +101,31 @@ public class InputManager {
 				float relY = win.getMouseRelY();
 				
 				// Movement
-				if(relX != 0 || relY != 0) in.mouseMoved(win.getMouseX(), win.getMouseY(), relX, relY);
+				if(relX != 0 || relY != 0) {
+					float tx = this.transformX(win.getMouseX(), win.getMouseY(), this.invWorld);
+					float ty = this.transformY(win.getMouseX(), win.getMouseY(), this.invWorld);
+					
+					float toldx = this.transformX(win.getMouseX() - win.getMouseRelX(), win.getMouseY() - win.getMouseRelY(), this.invWorld);
+					float toldy = this.transformY(win.getMouseX() - win.getMouseRelX(), win.getMouseY() - win.getMouseRelY(), this.invWorld);
+					
+					if(MathUtils.boxContains(tx, ty, 0, 0, in.getInputAreaWidth(), in.getInputAreaHeight())) {
+						if(!in.isMouseHover()) {
+							in.mouseEntered(tx, ty, tx - toldx, ty - toldy);
+						}
+						
+						in.mouseMoved(tx, ty, tx - toldx, ty - toldy);
+					} else if(in.isMouseHover()) {
+						in.mouseExited(tx, ty, tx - toldx, ty - toldy);
+					}
+				}
 				
 				// Wheel
 				if(win.getScrollRelX() != 0 || win.getScrollRelY() != 0) {
-					in.mouseWheelMoved(win.getMouseX(), win.getMouseY(), win.getScrollRelX(), win.getScrollRelY());
+					float tx = this.transformX(win.getMouseX(), win.getMouseY(), this.invWorld);
+					float ty = this.transformY(win.getMouseX(), win.getMouseY(), this.invWorld);
+					if(!MathUtils.boxContains(tx, ty, 0, 0, in.getInputAreaWidth(), in.getInputAreaHeight())) continue;
+					
+					in.mouseWheelMoved(tx, ty, win.getScrollRelX(), win.getScrollRelY());
 				}
 				
 				// - KEYBOARD - Always trigerred

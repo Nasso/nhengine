@@ -15,7 +15,7 @@ public class TestUIMain implements GameRunner {
 	public TestUIMain() {
 		this.game = Game.instance();
 		
-		this.game.init(this, new LaunchSettings().windowTitle("Nhengine UI").maxFPS(60).videoSize(WINDOW_WIDTH, WINDOW_HEIGHT));
+		this.game.init(this, new LaunchSettings().windowTitle("Nhengine UI").maxFPS(60).resizable(true).videoSize(WINDOW_WIDTH, WINDOW_HEIGHT));
 		
 		this.game.start();
 	}
