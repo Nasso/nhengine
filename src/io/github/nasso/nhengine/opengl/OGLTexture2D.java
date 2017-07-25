@@ -1,10 +1,10 @@
 package io.github.nasso.nhengine.opengl;
 
-import java.nio.ByteBuffer;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL21.*;
+import static org.lwjgl.opengl.GL30.*;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL21;
-import org.lwjgl.opengl.GL30;
+import java.nio.ByteBuffer;
 
 public class OGLTexture2D {
 	private static int textureCount = 0;
@@ -12,13 +12,13 @@ public class OGLTexture2D {
 	public static class Builder {
 		private int width = 512;
 		private int height = 512;
-		private int magFilter = GL11.GL_LINEAR;
-		private int minFilter = GL11.GL_LINEAR_MIPMAP_LINEAR;
-		private int wrapS = GL11.GL_REPEAT;
-		private int wrapT = GL11.GL_REPEAT;
-		private int internalFormat = GL21.GL_SRGB_ALPHA;
-		private int format = GL11.GL_RGBA;
-		private int type = GL11.GL_UNSIGNED_BYTE;
+		private int magFilter = GL_LINEAR;
+		private int minFilter = GL_LINEAR_MIPMAP_LINEAR;
+		private int wrapS = GL_REPEAT;
+		private int wrapT = GL_REPEAT;
+		private int internalFormat = GL_SRGB_ALPHA;
+		private int format = GL_RGBA;
+		private int type = GL_UNSIGNED_BYTE;
 		
 		private ByteBuffer data = null;
 		
@@ -85,13 +85,13 @@ public class OGLTexture2D {
 	
 	private int width = 512;
 	private int height = 512;
-	private int magFilter = GL11.GL_LINEAR;
-	private int minFilter = GL11.GL_LINEAR_MIPMAP_LINEAR;
-	private int wrapS = GL11.GL_REPEAT;
-	private int wrapT = GL11.GL_REPEAT;
-	private int internalFormat = GL21.GL_SRGB_ALPHA;
-	private int format = GL11.GL_RGBA;
-	private int type = GL11.GL_UNSIGNED_BYTE;
+	private int magFilter = GL_LINEAR;
+	private int minFilter = GL_LINEAR_MIPMAP_LINEAR;
+	private int wrapS = GL_REPEAT;
+	private int wrapT = GL_REPEAT;
+	private int internalFormat = GL_SRGB_ALPHA;
+	private int format = GL_RGBA;
+	private int type = GL_UNSIGNED_BYTE;
 	
 	private int version = -1;
 	
@@ -113,20 +113,20 @@ public class OGLTexture2D {
 	}
 	
 	public OGLTexture2D update() {
-		if(!GL11.glIsTexture(this.id)) {
-			this.id = GL11.glGenTextures();
+		if(!glIsTexture(this.id)) {
+			this.id = glGenTextures();
 			OGLTexture2D.textureCount++;
 		}
 		
 		this.bind();
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, this.internalFormat, this.width, this.height, 0, this.format, this.type, this.data);
+		glTexImage2D(GL_TEXTURE_2D, 0, this.internalFormat, this.width, this.height, 0, this.format, this.type, this.data);
 		
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, this.magFilter);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, this.minFilter);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, this.wrapS);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, this.wrapT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this.magFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this.minFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this.wrapS);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this.wrapT);
 		
-		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+		glGenerateMipmap(GL_TEXTURE_2D);
 		this.unbind();
 		
 		return this;
@@ -217,7 +217,7 @@ public class OGLTexture2D {
 	}
 	
 	public void bind() {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.id);
+		glBindTexture(GL_TEXTURE_2D, this.id);
 	}
 	
 	public void unbind() {
@@ -225,19 +225,19 @@ public class OGLTexture2D {
 	}
 	
 	public void dispose() {
-		if(GL11.glIsTexture(this.id)) {
-			GL11.glDeleteTextures(this.id);
+		if(glIsTexture(this.id)) {
+			glDeleteTextures(this.id);
 			OGLTexture2D.textureCount--;
 			this.id = 0;
 		}
 	}
 	
 	public boolean isNull() {
-		return !GL11.glIsTexture(this.id);
+		return !glIsTexture(this.id);
 	}
 	
 	public static void unbindAll() {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
 	public static int getTextureCount() {

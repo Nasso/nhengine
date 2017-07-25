@@ -110,7 +110,7 @@ public class OGLRenderer extends Renderer {
 		for(int y = cellStartY; y < cellEndY; y++) {
 			for(int x = cellStartX; x < cellEndX; x++) {
 				SpriteComponent c = comp.getSpriteComponent(x, y);
-				if(c == null || !c.isEnabled() || (!c.isOpaque() && c.getAlpha() == 0.0f)) continue;
+				if(c == null || !c.isEnabled() || (!c.isOpaque() && c.getOpacity() == 0.0f)) continue;
 				
 				this.sprite_instancesList[i] = c;
 				this.sprite_gridXYPositionOffset[i * 2] = x * comp.getCellWidth();

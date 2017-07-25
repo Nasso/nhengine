@@ -52,6 +52,10 @@ public class OGLManager {
 		return OGLManager.singleton;
 	}
 	
+	public static boolean versionAvailable(int major, int minor) {
+		return major <= VERSION_MAJOR && minor <= VERSION_MINOR;
+	}
+	
 	public static void dispose() {
 		OGLManager.singleton.disposeInst();
 		OGLManager.singleton = null;

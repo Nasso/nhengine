@@ -88,7 +88,7 @@ public class OGLTextRenderer extends OGLComponentRenderer<TextComponent> {
 			return;
 		}
 		
-		this.render(comp.getText(), 0, 0, this._mat4, comp.getFont(), comp.getAlignment(), comp.getBaseline(), rgba, null, comp.getAlpha(), comp.isOpaque());
+		this.render(comp.getText(), 0, 0, this._mat4, comp.getFont(), comp.getAlignment(), comp.getBaseline(), rgba, null, comp.getOpacity(), comp.isOpaque());
 	}
 	
 	public void render2D(CharSequence text, float x, float y, Matrix3fc transform, float scaleX, float scaleY, Font font, TextAlignment align, TextBaseline baseline, Vector4fc fillColor, Vector4fc strokeColor, OGLClipping clip, float alpha, boolean opaque) {

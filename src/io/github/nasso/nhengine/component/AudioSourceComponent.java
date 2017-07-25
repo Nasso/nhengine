@@ -144,7 +144,7 @@ public class AudioSourceComponent extends Component {
 	}
 	
 	/**
-	 * 
+	 * The "version" is an int that get incremented at every change in the state of this audio source. It is used internally.
 	 * 
 	 * @return The current version of the audio source.
 	 */
@@ -152,14 +152,17 @@ public class AudioSourceComponent extends Component {
 		return this.version;
 	}
 	
-	public void setVersion(int version) {
-		this.version = version;
-	}
-	
+	/**
+	 * @return The gain
+	 */
 	public float getGain() {
 		return this.gain;
 	}
 	
+	/**
+	 * @param gain
+	 *            The new gain
+	 */
 	public void setGain(float gain) {
 		if(this.gain == gain) return;
 		
@@ -167,10 +170,17 @@ public class AudioSourceComponent extends Component {
 		this.version++;
 	}
 	
+	/**
+	 * @return The minimum gain
+	 */
 	public float getMinGain() {
 		return this.minGain;
 	}
 	
+	/**
+	 * @param minGain
+	 *            The next minimum gain
+	 */
 	public void setMinGain(float minGain) {
 		if(this.minGain == minGain) return;
 		
@@ -178,10 +188,17 @@ public class AudioSourceComponent extends Component {
 		this.version++;
 	}
 	
+	/**
+	 * @return The maximum gain
+	 */
 	public float getMaxGain() {
 		return this.maxGain;
 	}
 	
+	/**
+	 * @param maxGain
+	 *            The new maximum gain
+	 */
 	public void setMaxGain(float maxGain) {
 		if(this.maxGain == maxGain) return;
 		
@@ -189,10 +206,17 @@ public class AudioSourceComponent extends Component {
 		this.version++;
 	}
 	
+	/**
+	 * @return True if the audio shall loop
+	 */
 	public boolean isLooping() {
 		return this.looping;
 	}
 	
+	/**
+	 * @param looping
+	 *            When true, the audio will loop when it'll reach the end
+	 */
 	public void setLooping(boolean looping) {
 		if(this.looping == looping) return;
 		
@@ -200,10 +224,17 @@ public class AudioSourceComponent extends Component {
 		this.version++;
 	}
 	
+	/**
+	 * @return The current time in seconds
+	 */
 	public float getCurrentTime() {
 		return this.currentTime;
 	}
 	
+	/**
+	 * @param currentTime
+	 *            The target time in seconds
+	 */
 	public void setCurrentTime(float currentTime) {
 		this.currentTime = currentTime;
 	}

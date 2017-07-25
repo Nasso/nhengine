@@ -209,7 +209,7 @@ public class Node extends Observable implements Disposable {
 		this.localMatrixDirty = this.worldMatrixDirty = true;
 		
 		for(int i = 0; i < this.components.size(); i++) {
-			this.components.get(i).setMatrixNeedUpdate();
+			this.components.get(i).matricesNeedUpdate();
 		}
 	}
 	

@@ -109,7 +109,7 @@ public class OGLSpriteRenderer extends OGLInstancedComponentRenderer<SpriteCompo
 		this.sprite_instDiffuseColorAlpha[i * 4] = comp.getColorTeint().x;
 		this.sprite_instDiffuseColorAlpha[i * 4 + 1] = comp.getColorTeint().y;
 		this.sprite_instDiffuseColorAlpha[i * 4 + 2] = comp.getColorTeint().z;
-		this.sprite_instDiffuseColorAlpha[i * 4 + 3] = comp.isOpaque() ? 1.0f : comp.getAlpha();
+		this.sprite_instDiffuseColorAlpha[i * 4 + 3] = comp.isOpaque() ? 1.0f : comp.getOpacity();
 		
 		if(gridXYPositionOffset != null) {
 			this.sprite_gridXYPositionOffset[i * 2] = gridXYPositionOffset[ic * 2];
@@ -128,11 +128,11 @@ public class OGLSpriteRenderer extends OGLInstancedComponentRenderer<SpriteCompo
 		int x = 0;
 		for(int i = 0; i < count; i++) {
 			SpriteComponent c = comps[i];
-			if(c == null || !c.isEnabled() || c.getSprite() == null || (!c.isOpaque() && c.getAlpha() == 0.0f)) continue;
+			if(c == null || !c.isEnabled() || c.getSprite() == null || (!c.isOpaque() && c.getOpacity() == 0.0f)) continue;
 			
 			this.prepareSprite(c, gridXYPositionOffset, i, x);
 			
-			translucent |= (!c.isOpaque() || c.getAlpha() >= 1.0f);
+			translucent |= (!c.isOpaque() || c.getOpacity() >= 1.0f);
 			
 			x++;
 			

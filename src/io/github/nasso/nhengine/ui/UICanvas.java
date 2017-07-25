@@ -134,7 +134,7 @@ public class UICanvas extends Node implements InputComponentEventHandler {
 		this.input.setInputAreaWidth(w);
 		this.input.setInputAreaHeight(h);
 		
-		this.cvs.setSize(w, h);
+		this.cvs.setResolution(w, h);
 		this.cvs.setScale(w, h);
 		
 		this.root.setSize(w, h);
