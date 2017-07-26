@@ -10,30 +10,33 @@ public class OGLStateManager {
 	private boolean culling = false;
 	private boolean stencilTest = false;
 	
-	private int blendSrc, blendDst;
-	private int stencilFunc, stencilFunc_ref, stencilFunc_mask;
-	private int stencilOp_sfail, stencilOp_dpfail, stencilOp_dppass;
+	private int blendSrc = GL_SRC_ALPHA, blendDst = GL_ONE_MINUS_SRC_ALPHA;
+	private int stencilFunc = GL_ALWAYS, stencilFunc_ref = 0,
+			stencilFunc_mask = 0;
+	private int stencilOp_sfail = GL_KEEP, stencilOp_dpfail = GL_KEEP,
+			stencilOp_dppass = GL_KEEP;
 	
 	private OGLStateManager() {
 		
 	}
 	
 	public void refreshState() {
-		this.blend = glIsEnabled(GL_BLEND);
-		this.depthTest = glIsEnabled(GL_DEPTH_TEST);
-		this.culling = glIsEnabled(GL_CULL_FACE);
-		this.stencilTest = glIsEnabled(GL_STENCIL_TEST);
+		if(this.blend) glEnable(GL_BLEND);
+		else glDisable(GL_BLEND);
 		
-		this.blendSrc = glGetInteger(GL_BLEND_SRC);
-		this.blendDst = glGetInteger(GL_BLEND_DST);
+		if(this.depthTest) glEnable(GL_DEPTH_TEST);
+		else glDisable(GL_DEPTH_TEST);
 		
-		this.stencilFunc = glGetInteger(GL_STENCIL_FUNC);
-		this.stencilFunc_ref = glGetInteger(GL_STENCIL_REF);
-		this.stencilFunc_mask = glGetInteger(GL_STENCIL_VALUE_MASK);
+		if(this.culling) glEnable(GL_CULL_FACE);
+		else glDisable(GL_CULL_FACE);
 		
-		this.stencilOp_sfail = glGetInteger(GL_STENCIL_FAIL);
-		this.stencilOp_dpfail = glGetInteger(GL_STENCIL_PASS_DEPTH_FAIL);
-		this.stencilOp_dppass = glGetInteger(GL_STENCIL_PASS_DEPTH_PASS);
+		if(this.stencilTest) glEnable(GL_STENCIL_TEST);
+		else glDisable(GL_STENCIL_TEST);
+		
+		glBlendFunc(this.blendSrc, this.blendDst);
+		
+		glStencilFunc(this.stencilFunc, this.stencilFunc_ref, this.stencilFunc_mask);
+		glStencilOp(this.stencilOp_sfail, this.stencilOp_dpfail, this.stencilOp_dppass);
 	}
 	
 	public void stencilFunc(int func, int ref, int mask) {
