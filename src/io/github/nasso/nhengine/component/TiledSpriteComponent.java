@@ -64,6 +64,6 @@ public class TiledSpriteComponent extends SpriteComponent {
 	}
 	
 	public void updateRegion() {
-		this.setRegion(1.0f / this.colCount * this.x, 1.0f / this.rowCount * this.y, 1.0f / this.colCount, 1.0f / this.rowCount);
+		this.setViewRectangle(1.0f / this.colCount * this.x, 1.0f / this.rowCount * this.y, 1.0f / this.colCount, 1.0f / this.rowCount);
 	}
 }

@@ -101,14 +101,14 @@ public class OGLSpriteRenderer extends OGLInstancedComponentRenderer<SpriteCompo
 		this.sprite_instQuickTransformWHDepth[i * 3 + 1] = comp.getHeight();
 		this.sprite_instQuickTransformWHDepth[i * 3 + 2] = comp.getWorldDepth();
 		
-		this.sprite_instSpriteSubRegion[i * 4] = comp.getRegion().x;
-		this.sprite_instSpriteSubRegion[i * 4 + 1] = comp.getRegion().y;
-		this.sprite_instSpriteSubRegion[i * 4 + 2] = comp.getRegion().z;
-		this.sprite_instSpriteSubRegion[i * 4 + 3] = comp.getRegion().w;
+		this.sprite_instSpriteSubRegion[i * 4] = comp.getViewRectangle().x();
+		this.sprite_instSpriteSubRegion[i * 4 + 1] = comp.getViewRectangle().y();
+		this.sprite_instSpriteSubRegion[i * 4 + 2] = comp.getViewRectangle().z();
+		this.sprite_instSpriteSubRegion[i * 4 + 3] = comp.getViewRectangle().w();
 		
-		this.sprite_instDiffuseColorAlpha[i * 4] = comp.getColorTeint().x;
-		this.sprite_instDiffuseColorAlpha[i * 4 + 1] = comp.getColorTeint().y;
-		this.sprite_instDiffuseColorAlpha[i * 4 + 2] = comp.getColorTeint().z;
+		this.sprite_instDiffuseColorAlpha[i * 4] = comp.getColorTeint().x();
+		this.sprite_instDiffuseColorAlpha[i * 4 + 1] = comp.getColorTeint().y();
+		this.sprite_instDiffuseColorAlpha[i * 4 + 2] = comp.getColorTeint().z();
 		this.sprite_instDiffuseColorAlpha[i * 4 + 3] = comp.isOpaque() ? 1.0f : comp.getOpacity();
 		
 		if(gridXYPositionOffset != null) {
