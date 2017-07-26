@@ -9,6 +9,7 @@ import io.github.nasso.nhengine.component.TiledSpriteComponent;
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.core.GameWindow;
 import io.github.nasso.nhengine.data.TextureIO;
+import io.github.nasso.nhengine.data.TiledFormatLoader;
 import io.github.nasso.nhengine.graphics.Texture2D;
 import io.github.nasso.nhengine.level.Node;
 import io.github.nasso.nhengine.level.Scene;
@@ -108,7 +109,12 @@ public class DemoWorldScene extends Scene {
 		float grassLevel = 0.7f;
 		float treeLevel = 0.75f;
 		
-		this.terrainBase = new TileMapComponent(this.terrainSize, this.terrainSize, 1, 1);
+		try {
+			this.terrainBase = TiledFormatLoader.parseTiledJSON("C:/Users/Kadau/Desktop/testjson.json");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		this.terrainDecorationLayer = new TileMapComponent(this.terrainSize, this.terrainSize, 1, 1);
 		
