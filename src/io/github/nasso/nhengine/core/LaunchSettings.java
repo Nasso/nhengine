@@ -10,7 +10,7 @@ public class LaunchSettings {
 	private int windowMonitor = 0;
 	private int maxFPS = 0;
 	private String windowTitle = "A Nhengine Game";
-	private boolean resizable = true;
+	private boolean resizable = false;
 	private boolean vsync = false;
 	private boolean steamClient = false;
 	

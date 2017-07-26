@@ -1,179 +1,301 @@
 package io.github.nasso.nhengine.component;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import io.github.nasso.nhengine.core.Game;
-import io.github.nasso.nhengine.core.GameWindow;
 import io.github.nasso.nhengine.core.Nhengine;
-import io.github.nasso.nhengine.event.InputComponentEventHandler;
-import io.github.nasso.nhengine.event.InputHandler;
+import io.github.nasso.nhengine.event.InputEventHandler;
 import io.github.nasso.nhengine.level.Component;
-import io.github.nasso.nhengine.utils.MathUtils;
 
+/**
+ * A component that can react to user input. Mouse inputs are trigerred only if they're in the specified rectangle.
+ * 
+ * @author nasso
+ */
 public class InputComponent extends Component {
-	private InputComponentEventHandler inputHandler;
+	private boolean[] isPressed = new boolean[Nhengine.MOUSE_BUTTON_LAST + 1];
+	
+	private InputEventHandler inputHandler;
 	private float inputAreaW, inputAreaH;
 	
-	public InputComponent(float inputAreaWidth, float inputAreaHeight, InputComponentEventHandler handler) {
+	private boolean mouseOver = false;
+	
+	/**
+	 * Constructs an input component with the specified size. The rectangle's top-left corner is at the origin (0; 0) of the component.
+	 * 
+	 * @param inputAreaWidth
+	 *            The input rectangle width.
+	 * @param inputAreaHeight
+	 *            The input rectangle height.
+	 * @param handler
+	 *            The event handler.
+	 */
+	public InputComponent(float inputAreaWidth, float inputAreaHeight, InputEventHandler handler) {
 		this.inputAreaW = inputAreaWidth;
 		this.inputAreaH = inputAreaHeight;
 		this.setInputHandler(handler);
-		
-		// TODO: Change that (it's ugly design)
-		// Instead, make the call in the Game class, when looping over the components
-		GameWindow win = Game.instance().window();
-		win.registerInputHandler(new InputHandler() {
-			private Vector3f _vec3 = new Vector3f();
-			private Vector2f _vec2 = new Vector2f();
-			
-			private boolean[] isPressed = new boolean[Nhengine.MOUSE_BUTTON_LAST + 1];
-			private float[] pressX = new float[Nhengine.MOUSE_BUTTON_LAST + 1];
-			private float[] pressY = new float[Nhengine.MOUSE_BUTTON_LAST + 1];
-			
-			public void mouseWheelMoved(float x, float y, float scrollX, float scrollY) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponent.this.getWorldPosition(this._vec3);
-				InputComponent.this.getWorldScale(this._vec2);
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				float boxX = this._vec3.x;
-				float boxY = this._vec3.y;
-				float boxW = InputComponent.this.inputAreaW * this._vec2.x;
-				float boxH = InputComponent.this.inputAreaH * this._vec2.y;
-				
-				if(handler != null && MathUtils.boxContains(x, y, boxX, boxY, boxW, boxH)) {
-					handler.mouseWheelMoved(x, y, scrollX, scrollY);
-				}
-			}
-			
-			public void mouseMoved(float newX, float newY, float relX, float relY) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponent.this.getWorldPosition(this._vec3);
-				InputComponent.this.getWorldScale(this._vec2);
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				float boxX = this._vec3.x;
-				float boxY = this._vec3.y;
-				float boxW = InputComponent.this.inputAreaW * this._vec2.x;
-				float boxH = InputComponent.this.inputAreaH * this._vec2.y;
-				
-				if(handler != null) {
-					if(MathUtils.boxContains(newX, newY, boxX, boxY, boxW, boxH)) {
-						if(!MathUtils.boxContains(newX - relX, newY - relY, boxX, boxY, boxW, boxH)) {
-							handler.mouseEntered(newX - boxX, newY - boxY, relX, relY);
-							return;
-						}
-						
-						for(int i = Nhengine.MOUSE_BUTTON_1; i <= Nhengine.MOUSE_BUTTON_LAST; i++) {
-							if(this.isPressed[i]) {
-								handler.mouseDragged(newX - this.pressX[i], newY - this.pressY[i], relX, relY, i);
-							}
-						}
-						
-						handler.mouseMoved(newX - boxX, newY - boxY, relX, relY);
-					} else if(MathUtils.boxContains(newX - relX, newY - relY, boxX, boxY, boxW, boxH)) {
-						handler.mouseExited(newX - boxX, newY - boxY, relX, relY);
-					}
-				}
-			}
-			
-			public void mouseButtonReleased(float x, float y, int btn) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponent.this.getWorldPosition(this._vec3);
-				InputComponent.this.getWorldScale(this._vec2);
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				float boxX = this._vec3.x;
-				float boxY = this._vec3.y;
-				float boxW = InputComponent.this.inputAreaW * this._vec2.x;
-				float boxH = InputComponent.this.inputAreaH * this._vec2.y;
-				
-				if(handler != null && MathUtils.boxContains(x, y, boxX, boxY, boxW, boxH)) {
-					this.isPressed[btn] = false;
-					
-					handler.mouseButtonReleased(x, y, btn);
-				}
-			}
-			
-			public void mouseButtonPressed(float x, float y, int btn) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponent.this.getWorldPosition(this._vec3);
-				InputComponent.this.getWorldScale(this._vec2);
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				float boxX = this._vec3.x;
-				float boxY = this._vec3.y;
-				float boxW = InputComponent.this.inputAreaW * this._vec2.x;
-				float boxH = InputComponent.this.inputAreaH * this._vec2.y;
-				
-				if(handler != null && MathUtils.boxContains(x, y, boxX, boxY, boxW, boxH)) {
-					this.isPressed[btn] = true;
-					this.pressX[btn] = x;
-					this.pressY[btn] = y;
-					
-					handler.mouseButtonPressed(x, y, btn);
-				}
-			}
-			
-			public void keyReleased(int key, int scancode) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				
-				if(handler != null) handler.keyReleased(key, scancode);
-			}
-			
-			public void keyPressed(int key, int scancode) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				if(handler != null) handler.keyPressed(key, scancode);
-			}
-			
-			public void keyTyped(int key, int scancode) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				if(handler != null) handler.keyTyped(key, scancode);
-			}
-			
-			public void textInput(int codepoint) {
-				if(!InputComponent.this.isEnabled()) return;
-				
-				InputComponentEventHandler handler = InputComponent.this.getInputHandler();
-				
-				if(handler != null) handler.textInput(codepoint);
-			}
-			
-		});
 	}
 	
+	/**
+	 * Triggers a "mouse wheel" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param x
+	 *            The <code>x</code> location of the event, in local space.
+	 * @param y
+	 *            The <code>y</code> location of the event, in local space.
+	 * @param scrollX
+	 *            The amount of horizontal scroll.
+	 * @param scrollY
+	 *            The amount of vertical scroll.
+	 */
+	public void mouseWheelMoved(float x, float y, float scrollX, float scrollY) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		if(handler != null) handler.mouseWheelMoved(x, y, scrollX, scrollY);
+	}
+	
+	/**
+	 * Triggers a "mouse entered" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param newX
+	 *            The new <code>x</code> position of the mouse, in local space.
+	 * @param newY
+	 *            The new <code>y</code> position of the mouse, in local space.
+	 * @param relX
+	 *            The new <code>x</code> position of the mouse, relative to its last position.
+	 * @param relY
+	 *            The new <code>y</code> position of the mouse, relative to its last position.
+	 */
+	public void mouseEntered(float newX, float newY, float relX, float relY) {
+		this.mouseOver = true;
+		
+		InputEventHandler handler = this.getInputHandler();
+		if(handler != null) handler.mouseEntered(newX, newY, relX, relY);
+	}
+	
+	/**
+	 * Triggers a "mouse exited" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param newX
+	 *            The new <code>x</code> position of the mouse, in local space.
+	 * @param newY
+	 *            The new <code>y</code> position of the mouse, in local space.
+	 * @param relX
+	 *            The new <code>x</code> position of the mouse, relative to its last position.
+	 * @param relY
+	 *            The new <code>y</code> position of the mouse, relative to its last position.
+	 */
+	public void mouseExited(float newX, float newY, float relX, float relY) {
+		this.mouseOver = false;
+		
+		InputEventHandler handler = this.getInputHandler();
+		if(handler != null) handler.mouseExited(newX, newY, relX, relY);
+	}
+	
+	/**
+	 * Triggers a "mouse moved" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param newX
+	 *            The new <code>x</code> position of the mouse, in local space.
+	 * @param newY
+	 *            The new <code>y</code> position of the mouse, in local space.
+	 * @param relX
+	 *            The new <code>x</code> position of the mouse, relative to its last position.
+	 * @param relY
+	 *            The new <code>y</code> position of the mouse, relative to its last position.
+	 */
+	public void mouseMoved(float newX, float newY, float relX, float relY) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		
+		if(handler != null) {
+			for(int i = 0; i < this.isPressed.length; i++) {
+				if(this.isPressed[i]) {
+					handler.mouseDragged(newX, newY, relX, relY, i);
+				}
+			}
+			
+			handler.mouseMoved(newX, newY, relX, relY);
+		}
+	}
+	
+	/**
+	 * Triggers a "mouse button released" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param x
+	 *            The <code>x</code> position of the event, in local space.
+	 * @param y
+	 *            The <code>y</code> position of the event, in local space.
+	 * @param btn
+	 *            The released button, one of:
+	 *            <ul>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_1 MOUSE_BUTTON_1/MOUSE_BUTTON_LEFT}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_2 MOUSE_BUTTON_2/MOUSE_BUTTON_RIGHT}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_3 MOUSE_BUTTON_3/MOUSE_BUTTON_MIDDLE}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_4 MOUSE_BUTTON_4}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_5 MOUSE_BUTTON_5}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_6 MOUSE_BUTTON_6}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_7 MOUSE_BUTTON_7}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_8 MOUSE_BUTTON_8}</li>
+	 *            </ul>
+	 */
+	public void mouseButtonReleased(float x, float y, int btn) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		if(handler != null) {
+			this.isPressed[btn] = false;
+			handler.mouseButtonReleased(x, y, btn);
+		}
+	}
+	
+	/**
+	 * Triggers a "mouse button pressed" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param x
+	 *            The <code>x</code> position of the event, in local space.
+	 * @param y
+	 *            The <code>y</code> position of the event, in local space.
+	 * @param btn
+	 *            The pressed button, one of:
+	 *            <ul>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_1 MOUSE_BUTTON_1/MOUSE_BUTTON_LEFT}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_2 MOUSE_BUTTON_2/MOUSE_BUTTON_RIGHT}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_3 MOUSE_BUTTON_3/MOUSE_BUTTON_MIDDLE}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_4 MOUSE_BUTTON_4}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_5 MOUSE_BUTTON_5}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_6 MOUSE_BUTTON_6}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_7 MOUSE_BUTTON_7}</li>
+	 *            <li>{@link Nhengine#MOUSE_BUTTON_8 MOUSE_BUTTON_8}</li>
+	 *            </ul>
+	 */
+	public void mouseButtonPressed(float x, float y, int btn) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		
+		if(handler != null) {
+			this.isPressed[btn] = true;
+			
+			handler.mouseButtonPressed(x, y, btn);
+		}
+	}
+	
+	/**
+	 * Triggers a "key released" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param key
+	 *            The released key code.
+	 */
+	public void keyReleased(int key) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		
+		if(handler != null) handler.keyReleased(key);
+	}
+	
+	/**
+	 * Triggers a "key pressed" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param key
+	 *            The pressed key code.
+	 */
+	public void keyPressed(int key) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		if(handler != null) handler.keyPressed(key);
+	}
+	
+	/**
+	 * Triggers a "key typed" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param key
+	 *            The typed key code.
+	 */
+	public void keyTyped(int key) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		if(handler != null) handler.keyTyped(key);
+	}
+	
+	/**
+	 * Triggers a "text input" event.<br>
+	 * This is called automatically.
+	 * 
+	 * @param codepoint
+	 *            The typed codepoint.
+	 */
+	public void textInput(int codepoint) {
+		if(!this.isEnabled()) return;
+		
+		InputEventHandler handler = this.getInputHandler();
+		
+		if(handler != null) handler.textInput(codepoint);
+	}
+	
+	/**
+	 * @return The width of the input area.
+	 */
 	public float getInputAreaWidth() {
 		return this.inputAreaW;
 	}
 	
+	/**
+	 * @param w
+	 *            The new width of the input area.
+	 */
 	public void setInputAreaWidth(float w) {
 		this.inputAreaW = w;
 	}
 	
+	/**
+	 * @return The height of the input area.
+	 */
 	public float getInputAreaHeight() {
 		return this.inputAreaH;
 	}
 	
+	/**
+	 * @param h
+	 *            The new height of the input area.
+	 */
 	public void setInputAreaHeight(float h) {
 		this.inputAreaH = h;
 	}
 	
-	public InputComponentEventHandler getInputHandler() {
+	/**
+	 * @return The current input handler.
+	 */
+	public InputEventHandler getInputHandler() {
 		return this.inputHandler;
 	}
 	
-	public void setInputHandler(InputComponentEventHandler inputHandler) {
+	/**
+	 * @param inputHandler
+	 *            The new input handler.
+	 */
+	public void setInputHandler(InputEventHandler inputHandler) {
 		this.inputHandler = inputHandler;
+	}
+	
+	/**
+	 * The "over" state of the mouse is changed when the mouse enters and exits this component,
+	 * i.e. when {@link #mouseEntered(float, float, float, float)} and {@link #mouseExited(float, float, float, float)} are called.
+	 * 
+	 * @return True if the mouse is over this component.
+	 */
+	public boolean isMouseOver() {
+		return this.mouseOver;
 	}
 }

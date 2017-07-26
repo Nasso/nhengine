@@ -31,10 +31,9 @@ public class TestCanvasSketch {
 	private CubicBezierEasing easing = new CubicBezierEasing(0.42f, 0.0f, 0.58f, 1.0f);
 	
 	public void setup() {
-		// @format:off
-		this.emojiStr = "lol";// @format:on
-		
+
 		try {
+			this.emojiStr = Nhutils.readFile("res/demo/emojis.txt", true);
 			this.lorem = Nhutils.readFile("res/demo/lorem.txt", true);
 			this.fnt = new TrueTypeFont("res/fonts/Ubuntu-R.ttf", 18, false, true);
 			this.emojiFnt = new TrueTypeFont("res/fonts/NotoEmoji-Regular.ttf", 48, false, true);

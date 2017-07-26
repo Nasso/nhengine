@@ -19,7 +19,7 @@ public class Box2D {
 	}
 	
 	public String toString() {
-		return "Box2D[minX=" + this.minX + "; minY=" + this.minY + "; maxX=" + this.maxX + "; maxY=" + this.maxY + "]";
+		return this.getClass().getSimpleName() + "[minX=" + this.minX + "; minY=" + this.minY + "; maxX=" + this.maxX + "; maxY=" + this.maxY + "]";
 	}
 	
 	public boolean intersects(float x, float y, float w, float h) {

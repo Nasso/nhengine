@@ -10,17 +10,10 @@ import java.util.Set;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFWCharCallback;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.nasso.nhengine.core.LaunchSettings.VideoMode;
-import io.github.nasso.nhengine.event.InputHandler;
 
 public class GameWindow {
 	private long window_id;
@@ -34,10 +27,15 @@ public class GameWindow {
 	
 	private Cursor currentCursor, setCursor;
 	
+	private List<Integer> keyInputs = new ArrayList<Integer>();
+	private List<Integer> textInputs = new ArrayList<Integer>();
+	private List<Integer> mouseInputs = new ArrayList<Integer>();
+	
 	private Set<Integer> pressedInputs = new HashSet<>();
 	private Set<Integer> releasedInputs = new HashSet<>();
 	
-	private List<InputHandler> inputHandlers = new ArrayList<InputHandler>();
+	private Set<Integer> pressedMouseInputs = new HashSet<>();
+	private Set<Integer> releasedMouseInputs = new HashSet<>();
 	
 	private float mousex = -1;
 	private float mousey = -1;
@@ -86,79 +84,47 @@ public class GameWindow {
 		this.dbtemp_a = BufferUtils.createDoubleBuffer(1);
 		this.dbtemp_b = BufferUtils.createDoubleBuffer(1);
 		
-		glfwSetCharCallback(this.window_id, new GLFWCharCallback() {
-			public void invoke(long window, int codepoint) {
-				for(int i = 0; i < GameWindow.this.inputHandlers.size(); i++) {
-					GameWindow.this.inputHandlers.get(i).textInput(codepoint);
-				}
+		glfwSetCharCallback(this.window_id, (window, codepoint) -> {
+			this.textInputs.add(codepoint);
+		});
+		
+		glfwSetKeyCallback(this.window_id, (window, key, scancode, action, mods) -> {
+			this.keyInputs.add(action);
+			this.keyInputs.add(key);
+			
+			if(action == GLFW_PRESS) {
+				this.pressedInputs.add(key);
+			} else if(action == GLFW_RELEASE) {
+				this.releasedInputs.add(key);
 			}
 		});
 		
-		glfwSetKeyCallback(this.window_id, new GLFWKeyCallback() {
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if(action == GLFW_REPEAT || action == GLFW_PRESS) {
-					for(int i = 0; i < GameWindow.this.inputHandlers.size(); i++) {
-						GameWindow.this.inputHandlers.get(i).keyTyped(key, scancode);
-					}
-				}
-				
-				if(action == GLFW_PRESS) {
-					GameWindow.this.pressedInputs.add(key);
-					
-					for(int i = 0; i < GameWindow.this.inputHandlers.size(); i++) {
-						GameWindow.this.inputHandlers.get(i).keyPressed(key, scancode);
-					}
-				} else if(action == GLFW_RELEASE) {
-					GameWindow.this.releasedInputs.add(key);
-					
-					for(int i = 0; i < GameWindow.this.inputHandlers.size(); i++) {
-						GameWindow.this.inputHandlers.get(i).keyReleased(key, scancode);
-					}
-				}
+		glfwSetMouseButtonCallback(this.window_id, (window, button, action, mods) -> {
+			this.mouseInputs.add(action);
+			this.mouseInputs.add((int) this.mousex);
+			this.mouseInputs.add((int) this.mousey);
+			this.mouseInputs.add(button);
+			
+			if(action == GLFW_PRESS) {
+				this.pressedMouseInputs.add(button);
+			} else if(action == GLFW_RELEASE) {
+				this.releasedMouseInputs.add(button);
 			}
 		});
 		
-		glfwSetMouseButtonCallback(this.window_id, new GLFWMouseButtonCallback() {
-			public void invoke(long window, int button, int action, int mods) {
-				if(action == GLFW_PRESS) {
-					GameWindow.this.pressedInputs.add(button);
-					
-					for(int i = 0; i < GameWindow.this.inputHandlers.size(); i++) {
-						GameWindow.this.inputHandlers.get(i).mouseButtonPressed(GameWindow.this.mousex, GameWindow.this.mousey, button);
-					}
-				} else if(action == GLFW_RELEASE) {
-					GameWindow.this.releasedInputs.add(button);
-					
-					for(int i = 0; i < GameWindow.this.inputHandlers.size(); i++) {
-						GameWindow.this.inputHandlers.get(i).mouseButtonReleased(GameWindow.this.mousex, GameWindow.this.mousey, button);
-					}
-				}
-			}
+		glfwSetScrollCallback(this.window_id, (window, xoffset, yoffset) -> {
+			this.scrollrelx += xoffset;
+			this.scrollrely += yoffset;
 		});
 		
-		glfwSetScrollCallback(this.window_id, new GLFWScrollCallback() {
-			public void invoke(long window, double xoffset, double yoffset) {
-				GameWindow.this.scrollrelx += xoffset;
-				GameWindow.this.scrollrely += yoffset;
-				
-				for(int i = 0; i < GameWindow.this.inputHandlers.size(); i++) {
-					GameWindow.this.inputHandlers.get(i).mouseWheelMoved(GameWindow.this.mousex, GameWindow.this.mousey, GameWindow.this.scrollrelx, GameWindow.this.scrollrely);
-				}
-			}
+		glfwSetWindowSizeCallback(this.window_id, (window, width, height) -> {
+			this.width = width;
+			this.height = height;
 		});
 		
-		glfwSetWindowSizeCallback(this.window_id, new GLFWWindowSizeCallback() {
-			public void invoke(long window, int width, int height) {
-				GameWindow.this.width = width;
-				GameWindow.this.height = height;
-			}
-		});
-		
-		glfwSetFramebufferSizeCallback(this.window_id, new GLFWFramebufferSizeCallback() {
-			public void invoke(long window, int width, int height) {
-				GameWindow.this.frameWidth = width;
-				GameWindow.this.frameHeight = height;
-			}
+		glfwSetFramebufferSizeCallback(this.window_id, (window, width, height) -> {
+			this.frameWidth = width;
+			this.frameHeight = height;
 		});
 	}
 	
@@ -195,6 +161,18 @@ public class GameWindow {
 		glfwWindowHint(GLFW_STENCIL_BITS, 8);
 	}
 	
+	List<Integer> getLastTextInputs() {
+		return this.textInputs;
+	}
+	
+	List<Integer> getLastKeyInputs() {
+		return this.keyInputs;
+	}
+	
+	List<Integer> getLastMouseInputs() {
+		return this.mouseInputs;
+	}
+	
 	void swapInterval(int value) {
 		glfwSwapInterval(value);
 	}
@@ -209,8 +187,15 @@ public class GameWindow {
 			this.currentCursor = this.setCursor;
 		}
 		
+		this.mouseInputs.clear();
+		this.keyInputs.clear();
+		this.textInputs.clear();
+		
 		this.pressedInputs.clear();
 		this.releasedInputs.clear();
+		
+		this.pressedMouseInputs.clear();
+		this.releasedMouseInputs.clear();
 		
 		this.mouserelx = 0;
 		this.mouserely = 0;
@@ -228,18 +213,7 @@ public class GameWindow {
 		this.mousex = newx;
 		this.mousey = newy;
 		
-		if(this.mouserelx != 0 || this.mouserely != 0) {
-			// The mouse moved
-			for(int i = 0; i < this.inputHandlers.size(); i++) {
-				this.inputHandlers.get(i).mouseMoved(this.mousex, this.mousey, this.mouserelx, this.mouserely);
-			}
-		}
-		
 		glfwPollEvents();
-	}
-	
-	public void registerInputHandler(InputHandler handler) {
-		this.inputHandlers.add(handler);
 	}
 	
 	public void maximize() {
@@ -278,20 +252,28 @@ public class GameWindow {
 		return this.cursorMode;
 	}
 	
-	public boolean isPressed(int key) {
+	public boolean isMouseButtonPressed(int btn) {
+		return this.pressedMouseInputs.contains(btn);
+	}
+	
+	public boolean isMouseButtonReleased(int btn) {
+		return this.releasedMouseInputs.contains(btn);
+	}
+	
+	public boolean isKeyPressed(int key) {
 		return this.pressedInputs.contains(key);
 	}
 	
-	public boolean isDown(int key) {
+	public boolean isKeyReleased(int key) {
+		return this.releasedInputs.contains(key);
+	}
+	
+	public boolean isKeyDown(int key) {
 		return glfwGetKey(this.window_id, key) == GLFW_PRESS;
 	}
 	
 	public boolean isButtonDown(int btn) {
 		return glfwGetMouseButton(this.window_id, btn) == GLFW_PRESS;
-	}
-	
-	public boolean isReleased(int key) {
-		return this.releasedInputs.contains(key);
 	}
 	
 	public boolean shouldClose() {

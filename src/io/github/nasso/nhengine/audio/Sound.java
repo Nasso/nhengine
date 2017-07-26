@@ -94,7 +94,12 @@ public class Sound extends Observable {
 	}
 	
 	/**
-	 * Loads a sound from the specified file. It uses the loader associated with the file extension.
+	 * Loads a sound from the specified file. It uses the loader associated with the file extension.<br>
+	 * Calling this method is equivalent to:
+	 * 
+	 * <pre>
+	 * {@link AudioDataLoader}.{@link AudioDataLoader#load load}(filePath, inJar);
+	 * </pre>
 	 * 
 	 * @param filePath
 	 *            The path to the file (with extension)

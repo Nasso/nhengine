@@ -69,7 +69,7 @@ public class TrueTypeFont extends Font {
 		int[] intArray3 = new int[1];
 		
 		this.fontInfo = STBTTFontinfo.create();
-		stbtt_InitFont(this.fontInfo, this.fontData);
+		stbtt_InitFont(this.fontInfo, this.fontData, stbtt_GetFontOffsetForIndex(this.fontData, 0));
 		stbtt_GetFontVMetrics(this.fontInfo, intArray1, intArray2, intArray3);
 		this.scale = stbtt_ScaleForPixelHeight(this.fontInfo, size);
 		
