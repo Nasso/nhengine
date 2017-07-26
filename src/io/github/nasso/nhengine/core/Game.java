@@ -6,13 +6,13 @@ import java.util.List;
 import com.codedisaster.steamworks.SteamAPI;
 
 import io.github.nasso.nhengine.audio.AudioPlayer;
+import io.github.nasso.nhengine.audio.openal.OALManager;
+import io.github.nasso.nhengine.audio.openal.OALPlayer;
 import io.github.nasso.nhengine.graphics.Renderer;
+import io.github.nasso.nhengine.graphics.opengl.OGLManager;
+import io.github.nasso.nhengine.graphics.opengl.OGLRenderer;
 import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Scene;
-import io.github.nasso.nhengine.openal.OALManager;
-import io.github.nasso.nhengine.openal.OALPlayer;
-import io.github.nasso.nhengine.opengl.OGLManager;
-import io.github.nasso.nhengine.opengl.OGLRenderer;
 import io.github.nasso.nhengine.utils.TimeManager;
 
 public class Game {
