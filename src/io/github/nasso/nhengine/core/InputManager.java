@@ -109,12 +109,12 @@ public class InputManager {
 					float toldy = this.transformY(win.getMouseX() - win.getMouseRelX(), win.getMouseY() - win.getMouseRelY(), this.invWorld);
 					
 					if(MathUtils.boxContains(tx, ty, 0, 0, in.getInputAreaWidth(), in.getInputAreaHeight())) {
-						if(!in.isMouseHover()) {
+						if(!in.isMouseOver()) {
 							in.mouseEntered(tx, ty, tx - toldx, ty - toldy);
 						}
 						
 						in.mouseMoved(tx, ty, tx - toldx, ty - toldy);
-					} else if(in.isMouseHover()) {
+					} else if(in.isMouseOver()) {
 						in.mouseExited(tx, ty, tx - toldx, ty - toldy);
 					}
 				}

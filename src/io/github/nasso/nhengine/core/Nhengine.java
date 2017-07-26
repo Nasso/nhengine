@@ -287,8 +287,8 @@ public class Nhengine {
 	public static final int MOUSE_BUTTON_8 = GLFW.GLFW_MOUSE_BUTTON_8;
 	public static final int MOUSE_BUTTON_LAST = GLFW.GLFW_MOUSE_BUTTON_LAST;
 	public static final int MOUSE_BUTTON_LEFT = GLFW.GLFW_MOUSE_BUTTON_LEFT;
-	public static final int MOUSE_BUTTON_RIGHT = GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 	public static final int MOUSE_BUTTON_MIDDLE = GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+	public static final int MOUSE_BUTTON_RIGHT = GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 	
 	// Joystick
 	public static final int JOYSTICK_1 = GLFW.GLFW_JOYSTICK_1;
