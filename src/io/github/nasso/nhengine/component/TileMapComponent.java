@@ -8,6 +8,8 @@ public class TileMapComponent extends Component {
 	private float cellWidth, cellHeight;
 	private SpriteComponent[] data;
 	
+	private boolean isometric = false;
+	
 	private Box2D boundingBox = new Box2D();
 	
 	public TileMapComponent(int sx, int sy, float cellWidth, float cellHeight) {
@@ -55,5 +57,16 @@ public class TileMapComponent extends Component {
 	
 	public Box2D getBoundingBox() {
 		return this.boundingBox;
+	}
+	
+	public boolean isIsometric() {
+		return this.isometric;
+	}
+	
+	public void setIsometric(boolean isometric) {
+		if(this.isometric == isometric) return;
+		
+		this.isometric = isometric;
+		this.computeBoundingBox();
 	}
 }

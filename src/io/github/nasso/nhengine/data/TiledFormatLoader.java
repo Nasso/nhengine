@@ -37,6 +37,7 @@ public class TiledFormatLoader {
 		// 1 - Read the tile-map json:
 		Path mapFilePath = Paths.get(mapFilePathStr);
 		JsonObject tileMapJSON = gson.fromJson(Nhutils.readFile(mapFilePathStr, inJar), JsonObject.class);
+		boolean isometric = tileMapJSON.get("orientation").getAsString().equals("isometric");
 		
 		// 2 - Read the tile-set json:
 		Path tileSetPath = mapFilePath.getParent().resolve(tileMapJSON.get("tilesets").getAsJsonArray().get(0).getAsJsonObject().get("source").getAsString());
@@ -66,6 +67,8 @@ public class TiledFormatLoader {
 			
 			tMap.setSpriteComponent(x, y, tiles[id]);
 		}
+		
+		tMap.setIsometric(isometric);
 		
 		return tMap;
 	}

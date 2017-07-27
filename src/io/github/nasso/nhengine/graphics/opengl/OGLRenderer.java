@@ -105,6 +105,8 @@ public class OGLRenderer extends Renderer {
 		cellEndX = Math.min(cellEndX, comp.getSizeX());
 		cellEndY = Math.min(cellEndY, comp.getSizeY());
 		
+		boolean iso = comp.isIsometric();
+		
 		// Instanced
 		int i = 0;
 		for(int y = cellStartY; y < cellEndY; y++) {
@@ -113,8 +115,15 @@ public class OGLRenderer extends Renderer {
 				if(c == null || !c.isEnabled() || (!c.isOpaque() && c.getOpacity() == 0.0f)) continue;
 				
 				this.sprite_instancesList[i] = c;
-				this.sprite_gridXYPositionOffset[i * 2] = x * comp.getCellWidth();
-				this.sprite_gridXYPositionOffset[i * 2 + 1] = y * comp.getCellHeight();
+				
+				if(iso) {
+					this.sprite_gridXYPositionOffset[i * 2] = ((x - y) * comp.getCellWidth() * 0.5f - x);
+					this.sprite_gridXYPositionOffset[i * 2 + 1] = ((x + y) * comp.getCellHeight() * 0.5f - y);
+				} else {
+					this.sprite_gridXYPositionOffset[i * 2] = x * comp.getCellWidth();
+					this.sprite_gridXYPositionOffset[i * 2 + 1] = y * comp.getCellHeight();
+				}
+				
 				i++;
 				
 				if(i == OGLSpriteRenderer.MAX_INSTANCES) {
