@@ -1,7 +1,5 @@
 package io.github.nasso.test.tiled;
 
-import java.io.IOException;
-
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.core.GameRunner;
 import io.github.nasso.nhengine.core.LaunchSettings;
@@ -31,9 +29,7 @@ public class TiledMain implements GameRunner {
 	public TiledMain() {
 		this.game = Game.instance();
 		
-		this.game.init(this, new LaunchSettings().windowTitle("Tiled test").videoWidth(GAME_WIDTH).videoHeight(GAME_HEIGHT).resizable(false).videoMode(VideoMode.WINDOWED));
-		
-		this.game.setMaxFPS(60);
+		this.game.init(this, new LaunchSettings().windowTitle("Tiled test").videoWidth(GAME_WIDTH).videoHeight(GAME_HEIGHT).maxFPS(60).videoMode(VideoMode.WINDOWED));
 		
 		this.game.start();
 	}

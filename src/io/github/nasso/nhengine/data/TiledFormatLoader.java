@@ -1,9 +1,8 @@
 package io.github.nasso.nhengine.data;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -12,106 +11,62 @@ import com.google.gson.JsonObject;
 import io.github.nasso.nhengine.component.TileMapComponent;
 import io.github.nasso.nhengine.component.TiledSpriteComponent;
 import io.github.nasso.nhengine.graphics.Texture2D;
+import io.github.nasso.nhengine.utils.Nhutils;
 
+/**
+ * 
+ * @author Kadau
+ * @author nasso
+ */
 public class TiledFormatLoader {
-	// Return tileMapComponent
-	public static TileMapComponent parseTiledJSON(String mapFilePath) throws IOException{
+	private TiledFormatLoader() {
+	}
+	
+	private static class TileSet {
+		String image;
 		
-		Gson parser = new Gson(); // JSON Parser see: https://github.com/google/gson
-		FileReader mapReader = new FileReader(mapFilePath); // JSON Map file reader
-		TileMapComponent tMap; // Return map
-		JsonObject parsedMap; // Parsen & Readen JSON file
-		JsonObject parsedTileMap; // Parsen & Readen JSON Map file
-		String tilesetSource = ""; // Tileset path
-		TiledSpriteComponent[] tilesSprite; // Tile sprites
-		Texture2D sprite = null; // Tilemap image
-		int[] tiles = null; // Tiles IDs
+		int columns;
+		int tilecount;
+		int tileheight;
+		int tilewidth;
+	}
+	
+	private static Gson gson = new Gson();
+	
+	public static TileMapComponent loadJSON(String mapFilePathStr, boolean inJar) throws IOException {
+		// 1 - Read the tile-map json:
+		Path mapFilePath = Paths.get(mapFilePathStr);
+		JsonObject tileMapJSON = gson.fromJson(Nhutils.readFile(mapFilePathStr, inJar), JsonObject.class);
 		
-		parsedMap = parser.fromJson(mapReader, JsonObject.class); // Parse JSON String to JsonObject
+		// 2 - Read the tile-set json:
+		Path tileSetPath = mapFilePath.getParent().resolve(tileMapJSON.get("tilesets").getAsJsonArray().get(0).getAsJsonObject().get("source").getAsString());
+		TileSet tileSet = gson.fromJson(Nhutils.readFile(tileSetPath.toString(), inJar), TileSet.class);
 		
-		// Instantiate map
-		tMap = new TileMapComponent(parsedMap.get("width").getAsInt(), parsedMap.get("height").getAsInt(), parsedMap.get("tilewidth").getAsInt(), parsedMap.get("tileheight").getAsInt());
-				
-		// Get tileset path
-		tilesetSource = parsedMap.get("tilesets").getAsJsonArray().get(0).getAsJsonObject().get("source").getAsString(); // Only supports 1 Tileset	
+		// 3 - Load the tile-set texture:
+		Texture2D sprite = TextureIO.loadTexture2D(tileSetPath.getParent().resolve(tileSet.image).toString(), 4, false, false, false, inJar);
 		
-		// Get tilemap infos json
-		parsedTileMap = parser.fromJson(new FileReader(new File(mapFilePath).getParent() + "/" + tilesetSource), JsonObject.class);
-		
-		// Allocate array space for tiles from tilemap
-		tilesSprite = new TiledSpriteComponent[parsedTileMap.get("tilecount").getAsInt()];
-		
-		// Get tilemap image
-		sprite = TextureIO.loadTexture2D(new File(mapFilePath).getParent() + "/" + parsedTileMap.get("image").getAsString()); // Get tileset image
-		
-		// Get main array
-		JsonArray arrayInts = parsedMap.get("layers").getAsJsonArray().get(0).getAsJsonObject().get("data").getAsJsonArray();
-		
-		// Allocate array space for level 
-		tiles = new int[tMap.getSizeX()*tMap.getSizeY()];
-		
-		// Reads ints tiles from json array
-		for(int i=0; i<tMap.getSizeX()*tMap.getSizeY(); i++){ 
-			tiles[i] = arrayInts.get(i).getAsInt();
+		// 4 - Construct the tiles of the tile-set:
+		TiledSpriteComponent[] tiles = new TiledSpriteComponent[tileSet.tilecount];
+		for(int i = 0; i < tiles.length; i++) {
+			int x = i % tileSet.columns;
+			int y = i / tileSet.columns;
+			
+			tiles[i] = new TiledSpriteComponent(sprite, tileSet.columns, tileSet.tilecount / tileSet.columns, x, y);
+			tiles[i].setSize(tileSet.tilewidth, tileSet.tileheight);
 		}
 		
-		// Add tilesets readen from file to tilemap
-		addTilesetToTilemap(tMap, tilesSprite, parsedMap, parsedTileMap, sprite);
+		// 5 - Construct the actual tile-map:
+		JsonArray dataArray = tileMapJSON.get("layers").getAsJsonArray().get(0).getAsJsonObject().get("data").getAsJsonArray();
 		
-		// Add tiles to level map
-		addTilesToLevel(tiles, tMap, tilesSprite);
-		
-		System.out.println("[Tiled Importer] Importing tilemap, Tiled version: " + parsedMap.get("tiledversion").getAsString());
+		TileMapComponent tMap = new TileMapComponent(tileMapJSON.get("width").getAsInt(), tileMapJSON.get("height").getAsInt(), tileMapJSON.get("tilewidth").getAsInt(), tileMapJSON.get("tileheight").getAsInt());
+		for(int i = 0; i < dataArray.size(); i++) {
+			int id = dataArray.get(i).getAsInt() - 1;
+			int x = i % tMap.getSizeX();
+			int y = i / tMap.getSizeX();
+			
+			tMap.setSpriteComponent(x, y, tiles[id]);
+		}
 		
 		return tMap;
 	}
-	
-	private static void addTilesetToTilemap(TileMapComponent map, TiledSpriteComponent[] tilesSprites, JsonObject parsedMap, JsonObject parsedTileMap, Texture2D tilemap){
-		int x = 0;
-		int y = 0;
-		
-		// Add tilesets to tilemap 
-		for(int i=0; i<parsedTileMap.get("tilecount").getAsInt(); i++){
-			if(x == parsedTileMap.get("columns").getAsInt()){ // Increment Y on max X
-				y++;
-				x = 0;		
-			}
-
-			TiledSpriteComponent tsp = new TiledSpriteComponent(tilemap, parsedTileMap.get("columns").getAsInt(), parsedTileMap.get("tilecount").getAsInt()/parsedTileMap.get("columns").getAsInt(), x, y);
-			
-			tsp.setSize(parsedMap.get("tilewidth").getAsInt(), parsedTileMap.get("tileheight").getAsInt());
-			
-			// Add tile to array
-			tilesSprites[i] = tsp;
-					
-			// Skip to next tile
-			x++;
-		}
-	}
-	
-	private static void addTilesToLevel(int[] tilesID, TileMapComponent tileMap, TiledSpriteComponent[] tiledSprites){
-		int x = 0;
-		int y = 0;
-		
-		// Add tiles to level
-		for (int tiledSpriteComponentID : tilesID) {
-			tileMap.setSpriteComponent(x, y, getSpriteFromID(tiledSpriteComponentID, tiledSprites));				
-			x++;		
-			if(x == tileMap.getSizeX()){
-				y++;
-				x=0;
-			}				
-		}
-	}
-	
-	private static int getIdFromPos(int x, int y, int mapX){
-		int ID = x;
-		ID += y*mapX;
-		return ID;
-	}
-	
-	private static TiledSpriteComponent getSpriteFromID(int id, TiledSpriteComponent[] array){
-		return array[id-1];
-	}
-	
 }

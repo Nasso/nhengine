@@ -109,12 +109,7 @@ public class DemoWorldScene extends Scene {
 		float grassLevel = 0.7f;
 		float treeLevel = 0.75f;
 		
-		try {
-			this.terrainBase = TiledFormatLoader.parseTiledJSON("C:/Users/Kadau/Desktop/testjson.json");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.terrainBase = new TileMapComponent(this.terrainSize, this.terrainSize, 1, 1);
 		
 		this.terrainDecorationLayer = new TileMapComponent(this.terrainSize, this.terrainSize, 1, 1);
 		
