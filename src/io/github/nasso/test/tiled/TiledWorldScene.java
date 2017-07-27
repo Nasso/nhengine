@@ -15,9 +15,9 @@ import io.github.nasso.nhengine.level.Scene;
 public class TiledWorldScene extends Scene {
 	private TileMapComponent terrainBase;
 	
-	private int terrainSize = 64;
-	
-	private float cameraSpeed = 4.0f / 100.0f;
+	private float cameraSpeed = 1.0f / 20.0f;
+	private float cameraX = 0;
+	private float cameraY = 0;
 	
 	private Node terrainNode;
 	
@@ -37,12 +37,11 @@ public class TiledWorldScene extends Scene {
 		this.terrainBase.setDepth(0);
 		
 		this.terrainNode = new Node();
-		this.terrainNode.setPosition(-this.terrainSize / 2f, -this.terrainSize / 2f);
+		this.terrainNode.setPosition(-this.terrainBase.getSizeX() * this.terrainBase.getCellWidth() * 0.5f, -this.terrainBase.getSizeY() * this.terrainBase.getCellHeight() * 0.5f);
 		this.terrainNode.addComponents(this.terrainBase);
 		
 		root.addChild(this.terrainNode);
-		this.getCamera().setScale(128);
-		
+		this.getCamera().setScale(this.terrainBase.getCellWidth() * 8);
 	}
 	
 	public void update(float delta) {
@@ -55,20 +54,22 @@ public class TiledWorldScene extends Scene {
 		}
 		
 		if(win.isKeyDown(Nhengine.KEY_D)) {
-			this.getCamera().translateX(this.cameraSpeed * delta);
+			this.cameraX += this.cameraSpeed * delta;
 		}
 		
 		if(win.isKeyDown(Nhengine.KEY_A)) {
-			this.getCamera().translateX(-this.cameraSpeed * delta);
+			this.cameraX -= this.cameraSpeed * delta;
 		}
 		
 		if(win.isKeyDown(Nhengine.KEY_W)) {
-			this.getCamera().translateY(-this.cameraSpeed * delta);
+			this.cameraY -= this.cameraSpeed * delta;
 		}
 		
 		if(win.isKeyDown(Nhengine.KEY_S)) {
-			this.getCamera().translateY(this.cameraSpeed * delta);
+			this.cameraY += this.cameraSpeed * delta;
 		}
+		
+		this.getCamera().setPosition(Math.round(this.cameraX), Math.round(this.cameraY));
 	}
 	
 	public void dispose() {

@@ -9,7 +9,6 @@ import io.github.nasso.nhengine.component.TiledSpriteComponent;
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.core.GameWindow;
 import io.github.nasso.nhengine.data.TextureIO;
-import io.github.nasso.nhengine.data.TiledFormatLoader;
 import io.github.nasso.nhengine.graphics.Texture2D;
 import io.github.nasso.nhengine.level.Node;
 import io.github.nasso.nhengine.level.Scene;

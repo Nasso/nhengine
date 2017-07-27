@@ -12,9 +12,6 @@
 # Log files
 *.log
 
-# Local resources
-/res/
-
 # Package Files #
 *.jar
 *.war

@@ -31,7 +31,7 @@ public class TestCanvasSketch {
 	private CubicBezierEasing easing = new CubicBezierEasing(0.42f, 0.0f, 0.58f, 1.0f);
 	
 	public void setup() {
-
+		
 		try {
 			this.emojiStr = Nhutils.readFile("res/demo/emojis.txt", true);
 			this.lorem = Nhutils.readFile("res/demo/lorem.txt", true);
@@ -200,6 +200,6 @@ public class TestCanvasSketch {
 		
 		gtx.setFill(Color.BLACK);
 		gtx.setTextBaseline(TextBaseline.TOP);
-		gtx.fillText("FPS: " + Game.instance().getFPS(), 4, 4);
+		gtx.fillText("FPS: " + Game.instance().getFPS() + " (limited)", 4, 4);
 	}
 }
