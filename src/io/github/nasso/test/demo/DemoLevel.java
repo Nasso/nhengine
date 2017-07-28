@@ -64,16 +64,16 @@ public class DemoLevel extends Level {
 		}
 		
 		if(win.isKeyReleased(DemoMain.GAME_KEY_LEFT)) {
-			this.characterTilesComp.setActiveCell(0, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(0, this.playerOrientation);
 			if(this.orientationCommands.contains(ORI_LEFT)) this.orientationCommands.remove(ORI_LEFT);
 		} else if(win.isKeyReleased(DemoMain.GAME_KEY_RIGHT)) {
-			this.characterTilesComp.setActiveCell(0, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(0, this.playerOrientation);
 			if(this.orientationCommands.contains(ORI_RIGHT)) this.orientationCommands.remove(ORI_RIGHT);
 		} else if(win.isKeyReleased(DemoMain.GAME_KEY_UP)) {
-			this.characterTilesComp.setActiveCell(0, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(0, this.playerOrientation);
 			if(this.orientationCommands.contains(ORI_UP)) this.orientationCommands.remove(ORI_UP);
 		} else if(win.isKeyReleased(DemoMain.GAME_KEY_DOWN)) {
-			this.characterTilesComp.setActiveCell(0, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(0, this.playerOrientation);
 			if(this.orientationCommands.contains(ORI_DOWN)) this.orientationCommands.remove(ORI_DOWN);
 		}
 		
@@ -85,18 +85,18 @@ public class DemoLevel extends Level {
 		if(animFrame == 4) animFrame = 0;
 		if(win.isKeyDown(DemoMain.GAME_KEY_LEFT)) {
 			this.playerPrecisePosX -= this.playerSpeed * delta;
-			this.characterTilesComp.setActiveCell(animFrame, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(animFrame, this.playerOrientation);
 		} else if(win.isKeyDown(DemoMain.GAME_KEY_RIGHT)) {
 			this.playerPrecisePosX += this.playerSpeed * delta;
-			this.characterTilesComp.setActiveCell(animFrame, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(animFrame, this.playerOrientation);
 		}
 		
 		if(win.isKeyDown(DemoMain.GAME_KEY_UP)) {
 			this.playerPrecisePosY -= this.playerSpeed * delta;
-			this.characterTilesComp.setActiveCell(animFrame, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(animFrame, this.playerOrientation);
 		} else if(win.isKeyDown(DemoMain.GAME_KEY_DOWN)) {
 			this.playerPrecisePosY += this.playerSpeed * delta;
-			this.characterTilesComp.setActiveCell(animFrame, this.playerOrientation);
+			this.characterTilesComp.setCurrentCell(animFrame, this.playerOrientation);
 		}
 		
 		this.player.setPosition((float) (Math.floor(this.playerPrecisePosX / this.pixelSize)) * this.pixelSize, (float) (Math.floor(this.playerPrecisePosY / this.pixelSize)) * this.pixelSize);
