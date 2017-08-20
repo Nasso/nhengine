@@ -12,7 +12,7 @@ import io.github.nasso.nhengine.utils.MathUtils;
  * <li>{@link CanvasComponent}: A flat drawable 2D cartesian surface.</li>
  * <li>{@link SpriteComponent}: Displays a sprite.</li>
  * <li>{@link TextComponent}: Displays text with a particular font.</li>
- * <li>{@link TileMapComponent}: Efficiently displays multiple {@link SpriteComponent}s in a 2D grid (like a terrain).</li>
+ * <li>{@link TileMapComponent}: Displays a map made with one of more tile-set(s) and one or more layer(s).</li>
  * </ul>
  * 
  * @author nasso

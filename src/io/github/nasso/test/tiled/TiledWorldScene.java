@@ -41,7 +41,7 @@ public class TiledWorldScene extends Scene {
 		this.terrainNode.addComponents(this.terrainBase);
 		
 		root.addChild(this.terrainNode);
-		this.getCamera().setScale(this.terrainBase.getCellWidth() * 8);
+		this.getCamera().setFieldOfView(this.terrainBase.getCellWidth() * 8);
 	}
 	
 	public void update(float delta) {

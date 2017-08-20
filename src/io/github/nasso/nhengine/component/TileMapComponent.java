@@ -1,5 +1,8 @@
 package io.github.nasso.nhengine.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.nasso.nhengine.graphics.Texture2D;
 import io.github.nasso.nhengine.utils.Box2D;
 
@@ -8,120 +11,235 @@ public class TileMapComponent extends DrawableComponent {
 		private Texture2D texture;
 		private int columns, rows;
 		
-		public TileSet(Texture2D texture, int cols, int rows) {
+		private int firstgid;
+		
+		private TileSet(Texture2D texture, int cols, int rows, int firstgid) {
 			this.texture = texture;
 			this.columns = cols;
 			this.rows = rows;
+			
+			this.firstgid = firstgid;
 		}
 		
-		public int getTileIDAt(int x, int y) {
+		public boolean containsGlobalID(int id) {
+			return id >= 0 && id < this.getTileCount();
+		}
+		
+		public int getTileID(int x, int y) {
 			if(x < 0 || x >= this.columns || y < 0 || y > this.rows) return -1;
 			
-			return y * this.columns + x;
+			return this.firstgid + y * this.columns + x;
 		}
 		
 		public int getTileColumn(int id) {
-			return id < 0 || id >= this.columns * this.rows ? -1 : id % this.columns;
+			if(!this.containsGlobalID(id)) return -1;
+			id -= this.firstgid;
+			
+			return id % this.columns;
 		}
 		
 		public int getTileRow(int id) {
-			return id < 0 || id >= this.columns * this.rows ? -1 : id / this.columns;
+			if(!this.containsGlobalID(id)) return -1;
+			id -= this.firstgid;
+			
+			return id / this.columns;
 		}
 		
 		public Texture2D getTexture() {
 			return this.texture;
 		}
 		
-		public void setTexture(Texture2D texture) {
-			this.texture = texture;
-		}
-		
 		public int getColumns() {
 			return this.columns;
-		}
-		
-		public void setColumns(int columns) {
-			this.columns = columns;
 		}
 		
 		public int getRows() {
 			return this.rows;
 		}
 		
-		public void setRows(int rows) {
-			this.rows = rows;
-		}
-		
 		public void dispose() {
 			this.texture.dispose();
 		}
+		
+		public int getFirstGlobalID() {
+			return this.firstgid;
+		}
+		
+		public int getTileCount() {
+			return this.columns * this.rows;
+		}
 	}
 	
-	private TileSet tileset;
+	public static class Layer {
+		private boolean visible;
+		
+		private int width, height;
+		
+		private float opacity;
+		private float horizontalOffset;
+		private float verticalOffset;
+		
+		private int[] data;
+		
+		private Layer(int width, int height) {
+			this.data = new int[width * height];
+			
+			for(int i = 0; i < this.data.length; i++)
+				this.data[i] = -1;
+			
+			this.visible = true;
+			
+			this.width = width;
+			this.height = height;
+			
+			this.opacity = 1.0f;
+			this.horizontalOffset = 0.0f;
+			this.verticalOffset = 0.0f;
+		}
+		
+		public float getOpacity() {
+			return this.opacity;
+		}
+		
+		public void setOpacity(float opacity) {
+			this.opacity = opacity;
+		}
+		
+		public float getHorizontalOffset() {
+			return this.horizontalOffset;
+		}
+		
+		public void setHorizontalOffset(float horizontalOffset) {
+			this.horizontalOffset = horizontalOffset;
+		}
+		
+		public float getVerticalOffset() {
+			return this.verticalOffset;
+		}
+		
+		public void setVerticalOffset(float verticalOffset) {
+			this.verticalOffset = verticalOffset;
+		}
+		
+		public int[] getData() {
+			return this.data;
+		}
+		
+		public void setTileAt(int x, int y, int tileID) {
+			if(x < 0 || x >= this.width || y < 0 || y >= this.height) return;
+			
+			this.data[y * this.width + x] = tileID;
+		}
+		
+		public int getTileAt(int x, int y) {
+			if(x < 0 || x >= this.width || y < 0 || y >= this.height) return -1;
+			
+			return this.data[y * this.width + x];
+		}
+		
+		public int[] getTiles() {
+			return this.data;
+		}
+		
+		public boolean isVisible() {
+			return this.visible;
+		}
+		
+		public void setVisible(boolean visible) {
+			this.visible = visible;
+		}
+	}
 	
-	private int sizeX, sizeY;
-	private float cellWidth, cellHeight;
+	private List<TileSet> tilesets = new ArrayList<TileSet>();
+	private List<Layer> layers = new ArrayList<Layer>();
 	
-	private int[] data;
+	private int width, height;
+	private float tileWidth, tileHeight;
 	
 	private boolean isometric = false;
 	
 	private Box2D boundingBox = new Box2D();
 	
-	public TileMapComponent(TileSet tileset, int sx, int sy, float cellWidth, float cellHeight) {
-		this.tileset = tileset;
-		
-		this.data = new int[sx * sy];
-		for(int i = 0; i < this.data.length; i++)
-			this.data[i] = -1;
-		
-		this.sizeX = sx;
-		this.sizeY = sy;
-		this.cellWidth = cellWidth;
-		this.cellHeight = cellHeight;
+	public TileMapComponent(int width, int height, float tileWidth, float tileHeight) {
+		this.width = width;
+		this.height = height;
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
 		this.setOpaque(false);
 		
 		this.computeBoundingBox();
 	}
 	
+	public TileSet createTileSet(Texture2D tex, int cols, int rows) {
+		int firstgid = 0;
+		
+		if(!this.tilesets.isEmpty()) {
+			TileSet previous = this.tilesets.get(this.tilesets.size() - 1);
+			firstgid = previous.firstgid + previous.getTileCount();
+		}
+		
+		TileSet set = new TileSet(tex, cols, rows, firstgid);
+		this.tilesets.add(set);
+		
+		return set;
+	}
+	
+	public TileSet getTileSet(int id) {
+		if(id < 0 || id >= this.getTileSetCount()) return null;
+		
+		return this.tilesets.get(id);
+	}
+	
+	public int getTileSetCount() {
+		return this.tilesets.size();
+	}
+	
+	public Layer createLayer() {
+		Layer layer = new Layer(this.width, this.height);
+		this.layers.add(layer);
+		
+		return layer;
+	}
+	
+	public Layer getLayer(int id) {
+		if(id < 0 || id >= this.getLayerCount()) return null;
+		
+		return this.layers.get(id);
+	}
+	
+	public int getLayerCount() {
+		return this.layers.size();
+	}
+	
+	public TileSet getTileSetForGlobalTileID(int tileID) {
+		if(tileID < 0) return null;
+		
+		for(int i = 0; i < this.getTileSetCount(); i++) {
+			TileSet set = this.getTileSet(i);
+			if(tileID < set.firstgid + set.getTileCount()) return set;
+		}
+		
+		return null;
+	}
+	
 	public int getMapSizeX() {
-		return this.sizeX;
+		return this.width;
 	}
 	
 	public int getMapSizeY() {
-		return this.sizeY;
+		return this.height;
 	}
 	
 	public float getCellWidth() {
-		return this.cellWidth;
+		return this.tileWidth;
 	}
 	
 	public float getCellHeight() {
-		return this.cellHeight;
-	}
-	
-	public void setTileAt(int x, int y, int tileCol, int tileRow) {
-		this.setTileAt(x, y, this.tileset.getTileIDAt(tileCol, tileRow));
-	}
-	
-	public void setTileAt(int x, int y, int tileID) {
-		if(x < 0 || x >= this.sizeX || y < 0 || y >= this.sizeY) return;
-		
-		this.data[y * this.sizeX + x] = tileID;
-	}
-	
-	public int getTileAt(int x, int y) {
-		if(x < 0 || x >= this.sizeX || y < 0 || y >= this.sizeY) return -1;
-		
-		return this.data[y * this.sizeX + x];
-	}
-	
-	public int[] getTiles() {
-		return this.data;
+		return this.tileHeight;
 	}
 	
 	private void computeBoundingBox() {
-		this.boundingBox.redefine(-this.sizeX / 2.0f * this.cellWidth, -this.sizeY / 2.0f * this.cellHeight, this.sizeX / 2.0f * this.cellWidth, -this.sizeY / 2.0f * this.cellHeight);
+		this.boundingBox.redefine(-this.width / 2.0f * this.tileWidth, -this.height / 2.0f * this.tileHeight, this.width / 2.0f * this.tileWidth, -this.height / 2.0f * this.tileHeight);
 	}
 	
 	public Box2D getBoundingBox() {
@@ -137,13 +255,5 @@ public class TileMapComponent extends DrawableComponent {
 		
 		this.isometric = isometric;
 		this.computeBoundingBox();
-	}
-	
-	public TileSet getTileSet() {
-		return this.tileset;
-	}
-	
-	public void setTileSet(TileSet tileset) {
-		this.tileset = tileset;
 	}
 }

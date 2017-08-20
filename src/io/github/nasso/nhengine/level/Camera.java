@@ -6,7 +6,7 @@ import org.joml.Vector2f;
 public class Camera {
 	private Vector2f position = new Vector2f();
 	private float rotation = 0;
-	private float scale = 15;
+	private float fov = 15;
 	private float aspectRatio = 1;
 	private float zNear = -10000;
 	private float zFar = 10000;
@@ -19,7 +19,7 @@ public class Camera {
 	}
 	
 	public void updateProjViewMatrix() {
-		this.projViewMatrix.setOrtho(this.position.x - this.scale, this.position.x + this.scale, this.position.y + this.scale / this.aspectRatio, this.position.y - this.scale / this.aspectRatio, this.zNear, this.zFar);
+		this.projViewMatrix.setOrtho(this.position.x - this.fov, this.position.x + this.fov, this.position.y + this.fov / this.aspectRatio, this.position.y - this.fov / this.aspectRatio, this.zNear, this.zFar);
 		this.projViewMatrix.rotate(this.rotation / 180.0f * 3.141593f, 0, 0, 1);
 		
 		this.matrixDirty = false;
@@ -39,8 +39,8 @@ public class Camera {
 		return this.rotation;
 	}
 	
-	public float getScale() {
-		return this.scale;
+	public float getFieldOfView() {
+		return this.fov;
 	}
 	
 	public void setMatrixNeedUpdate() {
@@ -123,12 +123,6 @@ public class Camera {
 		this.setMatrixNeedUpdate();
 	}
 	
-	public void scale(float fact) {
-		this.scale *= fact;
-		
-		this.setMatrixNeedUpdate();
-	}
-	
 	public float getAspectRatio() {
 		return this.aspectRatio;
 	}
@@ -169,17 +163,17 @@ public class Camera {
 		this.setMatrixNeedUpdate();
 	}
 	
-	public void setScale(float scale) {
-		if(this.scale == scale) return;
+	public void setFieldOfView(float fov) {
+		if(this.fov == fov) return;
 		
-		this.scale = scale;
+		this.fov = fov;
 		
 		this.setMatrixNeedUpdate();
 	}
 	
 	public void setViewport2D(float w, float h) {
 		this.aspectRatio = w / h;
-		this.scale = w / 2.0f;
+		this.fov = w / 2.0f;
 		this.position.set(w / 2.0f, h / 2.0f);
 		this.rotation = 0;
 		

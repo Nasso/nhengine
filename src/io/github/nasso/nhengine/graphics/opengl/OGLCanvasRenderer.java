@@ -87,7 +87,7 @@ public class OGLCanvasRenderer extends OGLComponentRenderer<CanvasComponent> {
 		this.gtx.beginFrame(this.getWidth(), this.getHeight(), Game.instance().window().getDevicePixelRatio());
 		
 		// LMAO I DON'T KNOW HOW I FOUND THIS FORMULA BUT IT WORKS, DON'T ASK ME HOW PLZ
-		float camScale = (this.getWidth()) * (0.5f / cam.getScale());
+		float camScale = (this.getWidth()) * (0.5f / cam.getFieldOfView());
 		
 		this.gtx.save();
 		this.gtx.translate(this.getWidth() / 2f, this.getHeight() / 2f);

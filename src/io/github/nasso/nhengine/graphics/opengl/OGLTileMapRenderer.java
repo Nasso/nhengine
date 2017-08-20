@@ -6,12 +6,17 @@ import static org.lwjgl.opengl.GL31.*;
 
 import java.io.IOException;
 
+import org.joml.Vector3f;
+
 import io.github.nasso.nhengine.component.TileMapComponent;
 import io.github.nasso.nhengine.component.TileMapComponent.TileSet;
+import io.github.nasso.nhengine.level.Camera;
 import io.github.nasso.nhengine.level.Scene;
 
 public class OGLTileMapRenderer extends OGLComponentRenderer<TileMapComponent> {
 	public static final int MAX_INSTANCES = 256;
+	
+	private Vector3f _vec3 = new Vector3f();
 	
 	private OGLTileMapProgram program;
 	private OGLVertexArray vao;
@@ -47,65 +52,80 @@ public class OGLTileMapRenderer extends OGLComponentRenderer<TileMapComponent> {
 	public void render(Scene sce, TileMapComponent comp) {
 		OGLStateManager.INSTANCE.blend(!comp.isOpaque());
 		
+		Camera cam = sce.getCamera();
+		float xfov = cam.getFieldOfView();
+		float yfov = xfov / cam.getAspectRatio();
+		
+		comp.getWorldPosition(this._vec3);
+		float wMapX = this._vec3.x;
+		float wMapY = this._vec3.y;
+		
 		this.program.use();
-		this.program.loadToUniform("tilesetSize", comp.getTileSet().getColumns(), comp.getTileSet().getRows());
 		this.program.loadToUniform("tileWidthHeightDepth", comp.getCellWidth(), comp.getCellHeight(), comp.getWorldDepth());
-		this.program.loadToUniform("opacity", comp.isOpaque() ? 1.0f : comp.getOpacity());
 		this.program.loadToUniform("model", comp.getWorldMatrix(true));
 		this.program.loadToUniform("isometric", comp.isIsometric());
 		
-		this.program.loadToUniform("diffuseTexture", OGLTextures.get().update(comp.getTileSet().getTexture()), 0);
-		this.program.loadToUniform("projView", sce.getCamera().getProjViewMatrix(true));
+		this.program.loadToUniform("projView", cam.getProjViewMatrix(true));
 		
 		this.vao.bind();
 		
-		float gridSizeX = comp.getMapSizeX() * sce.getCamera().getScale();
-		float gridSizeY = comp.getMapSizeY() * sce.getCamera().getScale();
-		
-		int cellStartX = (int) (sce.getCamera().getPosition().x / comp.getCellWidth() - gridSizeX) - 1;
-		int cellStartY = (int) (sce.getCamera().getPosition().y / comp.getCellHeight() - gridSizeY / sce.getCamera().getAspectRatio()) - 1;
-		
-		int cellEndX = cellStartX + ((int) gridSizeX + 1) * 2 + 1;
-		int cellEndY = cellStartY + ((int) (gridSizeY / sce.getCamera().getAspectRatio()) + 1) * 2 + 2;
-		
-		cellStartX = Math.max(cellStartX, 0);
-		cellStartY = Math.max(cellStartY, 0);
-		
-		cellEndX = Math.min(cellEndX, comp.getMapSizeX());
-		cellEndY = Math.min(cellEndY, comp.getMapSizeY());
-		
-		TileSet tileset = comp.getTileSet();
-		int[] tiles = comp.getTiles();
-		
-		// Render the stuff MAX_INSTANCES by MAX_INSTANCES
-		int bInstanceID = 0;
-		
-		for(int cellX = cellStartX; cellX < cellEndX; cellX++) {
-			for(int cellY = cellStartY; cellY < cellEndY; cellY++) {
-				int tileID = tiles[cellY * comp.getMapSizeX() + cellX];
-				if(tileID == -1) continue;
+		for(int tilesetID = 0; tilesetID < comp.getTileSetCount(); tilesetID++) {
+			TileSet tileset = comp.getTileSet(tilesetID);
+			
+			this.program.loadToUniform("tilesetSize", tileset.getColumns(), tileset.getRows());
+			this.program.loadToUniform("diffuseTexture", OGLTextures.get().update(tileset.getTexture()), 0);
+			
+			for(int layerID = 0; layerID < comp.getLayerCount(); layerID++) {
+				TileMapComponent.Layer layer = comp.getLayer(layerID);
+				if(!layer.isVisible()) continue;
 				
-				int locx = tileset.getTileColumn(tileID);
-				int locy = tileset.getTileRow(tileID);
+				this.program.loadToUniform("opacity", comp.isOpaque() ? 1.0f : comp.getOpacity() * layer.getOpacity());
+
+				int cellStartX = (int) ((cam.getPosition().x - wMapX - xfov - layer.getHorizontalOffset()) / comp.getCellWidth());
+				int cellStartY = (int) ((cam.getPosition().y - wMapY - yfov - layer.getVerticalOffset()) / comp.getCellHeight());
 				
-				this.arr_tileSetLocationMapPosition[bInstanceID * 4] = locx;
-				this.arr_tileSetLocationMapPosition[bInstanceID * 4 + 1] = locy;
-				this.arr_tileSetLocationMapPosition[bInstanceID * 4 + 2] = cellX;
-				this.arr_tileSetLocationMapPosition[bInstanceID * 4 + 3] = cellY;
+				int cellEndX = (int) (cellStartX + xfov * 2) + 1;
+				int cellEndY = (int) (cellStartY + yfov * 2) + 1;
 				
-				bInstanceID++;
+				cellStartX = Math.max(cellStartX, 0);
+				cellStartY = Math.max(cellStartY, 0);
 				
-				if(bInstanceID >= MAX_INSTANCES) {
-					// At this point, bInstanceID == rendered tile count
+				cellEndX = Math.min(cellEndX, comp.getMapSizeX());
+				cellEndY = Math.min(cellEndY, comp.getMapSizeY());
+				
+				int[] tiles = layer.getTiles();
+				
+				// Render the stuff MAX_INSTANCES by MAX_INSTANCES
+				int bInstanceID = 0;
+				
+				for(int cellX = cellStartX; cellX < cellEndX; cellX++) {
+					for(int cellY = cellStartY; cellY < cellEndY; cellY++) {
+						int tileID = tiles[cellY * comp.getMapSizeX() + cellX];
+						if(tileID == -1 || !tileset.containsGlobalID(tileID)) continue;
+						
+						int locx = tileset.getTileColumn(tileID);
+						int locy = tileset.getTileRow(tileID);
+						
+						this.arr_tileSetLocationMapPosition[bInstanceID * 4] = locx;
+						this.arr_tileSetLocationMapPosition[bInstanceID * 4 + 1] = locy;
+						this.arr_tileSetLocationMapPosition[bInstanceID * 4 + 2] = cellX + layer.getHorizontalOffset() / comp.getCellWidth();
+						this.arr_tileSetLocationMapPosition[bInstanceID * 4 + 3] = cellY + layer.getVerticalOffset() / comp.getCellHeight();
+						
+						bInstanceID++;
+						
+						if(bInstanceID >= MAX_INSTANCES) {
+							// At this point, bInstanceID == rendered tile count
+							this.renderBatch(bInstanceID);
+							
+							bInstanceID = 0;
+						}
+					}
+				}
+				
+				if(bInstanceID > 0) {
 					this.renderBatch(bInstanceID);
-					
-					bInstanceID = 0;
 				}
 			}
-		}
-		
-		if(bInstanceID > 0) {
-			this.renderBatch(bInstanceID);
 		}
 		
 		OGLVertexArray.unbindAll();
