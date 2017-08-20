@@ -1,0 +1,28 @@
+{ "height":6,
+ "layers":[
+        {
+         "data":[32, 41, 47, 41, 41, 41, 42, 2, 21, 59, 3, 51, 44, 21, 21, 21, 3, 51, 42, 59, 31, 60, 3, 51, 48, 3, 3, 3, 3, 51, 42, 51, 51, 51, 51, 51],
+         "height":6,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":6,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"isometric",
+ "renderorder":"right-down",
+ "tiledversion":"1.0.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"tileset.json"
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":1,
+ "width":6
+}

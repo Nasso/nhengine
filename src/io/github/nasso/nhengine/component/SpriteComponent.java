@@ -39,7 +39,7 @@ public class SpriteComponent extends DrawableComponent {
 	 *            The height of the view rectangle, in normalized coordinates (in the range <code>[0..1]</code>).
 	 */
 	public SpriteComponent(Texture2D sprite, float x, float y, float width, float height) {
-		this.setSprite(sprite);
+		this.setTexture(sprite);
 		this.setViewRectangle(x, y, width, height);
 	}
 	
@@ -61,7 +61,7 @@ public class SpriteComponent extends DrawableComponent {
 	/**
 	 * @return The sprite's full texture.
 	 */
-	public Texture2D getSprite() {
+	public Texture2D getTexture() {
 		return this.sprite;
 	}
 	
@@ -69,7 +69,7 @@ public class SpriteComponent extends DrawableComponent {
 	 * @param sprite
 	 *            The new sprite texture.
 	 */
-	public void setSprite(Texture2D sprite) {
+	public void setTexture(Texture2D sprite) {
 		this.sprite = sprite;
 	}
 	

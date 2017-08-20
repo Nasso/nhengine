@@ -5,12 +5,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import io.github.nasso.nhengine.component.TileMapComponent;
-import io.github.nasso.nhengine.component.TiledSpriteComponent;
-import io.github.nasso.nhengine.graphics.Texture2D;
+import io.github.nasso.nhengine.component.TileMapComponent.TileSet;
 import io.github.nasso.nhengine.utils.Nhutils;
 
 /**
@@ -22,13 +19,33 @@ public class TiledFormatLoader {
 	private TiledFormatLoader() {
 	}
 	
-	private static class TileSet {
+	private static class TileMapDef {
+		private static class TileMapTileSetEntryDef {
+			String source;
+		}
+		
+		private static class TileMapLayerDef {
+			int[] data;
+			
+		}
+		
+		int width;
+		int height;
+		
+		int tilewidth;
+		int tileheight;
+		
+		String orientation;
+		TileMapTileSetEntryDef[] tilesets;
+		
+		TileMapLayerDef[] layers;
+	}
+	
+	private static class TileSetDef {
 		String image;
 		
 		int columns;
 		int tilecount;
-		int tileheight;
-		int tilewidth;
 	}
 	
 	private static Gson gson = new Gson();
@@ -36,36 +53,27 @@ public class TiledFormatLoader {
 	public static TileMapComponent loadJSON(String mapFilePathStr, boolean inJar) throws IOException {
 		// 1 - Read the tile-map json:
 		Path mapFilePath = Paths.get(mapFilePathStr);
-		JsonObject tileMapJSON = gson.fromJson(Nhutils.readFile(mapFilePathStr, inJar), JsonObject.class);
-		boolean isometric = tileMapJSON.get("orientation").getAsString().equals("isometric");
+		TileMapDef tileMapDef = gson.fromJson(Nhutils.readFile(mapFilePathStr, inJar), TileMapDef.class);
+		boolean isometric = tileMapDef.orientation.equals("isometric");
 		
 		// 2 - Read the tile-set json:
-		Path tileSetPath = mapFilePath.getParent().resolve(tileMapJSON.get("tilesets").getAsJsonArray().get(0).getAsJsonObject().get("source").getAsString());
-		TileSet tileSet = gson.fromJson(Nhutils.readFile(tileSetPath.toString(), inJar), TileSet.class);
+		Path tileSetPath = mapFilePath.getParent().resolve(tileMapDef.tilesets[0].source);
+		TileSetDef tileSetDef = gson.fromJson(Nhutils.readFile(tileSetPath.toString(), inJar), TileSetDef.class);
 		
-		// 3 - Load the tile-set texture:
-		Texture2D sprite = TextureIO.loadTexture2D(tileSetPath.getParent().resolve(tileSet.image).toString(), 4, false, false, false, inJar);
+		// 3 - Create the tile-set:
+		TileSet tileSet = new TileSet(TextureIO.loadTexture2D(tileSetPath.getParent().resolve(tileSetDef.image).toString(), 4, false, false, false, inJar), tileSetDef.columns, tileSetDef.tilecount / tileSetDef.columns);
 		
-		// 4 - Construct the tiles of the tile-set:
-		TiledSpriteComponent[] tiles = new TiledSpriteComponent[tileSet.tilecount];
-		for(int i = 0; i < tiles.length; i++) {
-			int x = i % tileSet.columns;
-			int y = i / tileSet.columns;
+		// 4 - Construct the actual tile-map:
+		int[] dataArray = tileMapDef.layers[0].data;
+		
+		TileMapComponent tMap = new TileMapComponent(tileSet, tileMapDef.width, tileMapDef.height, tileMapDef.tilewidth, tileMapDef.tileheight);
+		
+		for(int i = 0; i < dataArray.length; i++) {
+			int id = dataArray[i] - 1;
+			int x = i % tMap.getMapSizeX();
+			int y = i / tMap.getMapSizeX();
 			
-			tiles[i] = new TiledSpriteComponent(sprite, tileSet.columns, tileSet.tilecount / tileSet.columns, x, y);
-			tiles[i].setSize(tileSet.tilewidth, tileSet.tileheight);
-		}
-		
-		// 5 - Construct the actual tile-map:
-		JsonArray dataArray = tileMapJSON.get("layers").getAsJsonArray().get(0).getAsJsonObject().get("data").getAsJsonArray();
-		
-		TileMapComponent tMap = new TileMapComponent(tileMapJSON.get("width").getAsInt(), tileMapJSON.get("height").getAsInt(), tileMapJSON.get("tilewidth").getAsInt(), tileMapJSON.get("tileheight").getAsInt());
-		for(int i = 0; i < dataArray.size(); i++) {
-			int id = dataArray.get(i).getAsInt() - 1;
-			int x = i % tMap.getSizeX();
-			int y = i / tMap.getSizeX();
-			
-			tMap.setSpriteComponent(x, y, tiles[id]);
+			tMap.setTileAt(x, y, id);
 		}
 		
 		tMap.setIsometric(isometric);

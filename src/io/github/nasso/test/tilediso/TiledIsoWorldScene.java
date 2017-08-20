@@ -1,4 +1,4 @@
-package io.github.nasso.test.tiled;
+package io.github.nasso.test.tilediso;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import io.github.nasso.nhengine.data.TiledFormatLoader;
 import io.github.nasso.nhengine.level.Node;
 import io.github.nasso.nhengine.level.Scene;
 
-public class TiledWorldScene extends Scene {
+public class TiledIsoWorldScene extends Scene {
 	private TileMapComponent terrainBase;
 	
 	private float cameraSpeed = 1.0f / 20.0f;
@@ -23,13 +23,13 @@ public class TiledWorldScene extends Scene {
 	
 	private Vector2f frameSize = new Vector2f();
 	
-	public TiledWorldScene() {
+	public TiledIsoWorldScene() {
 		super("World Scene");
 		
 		Node root = this.getRoot();
 		
 		try {
-			this.terrainBase = TiledFormatLoader.loadJSON("res/demo/maps/orth/map.json", true);
+			this.terrainBase = TiledFormatLoader.loadJSON("res/demo/maps/iso/map.json", true);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -41,7 +41,7 @@ public class TiledWorldScene extends Scene {
 		this.terrainNode.addComponents(this.terrainBase);
 		
 		root.addChild(this.terrainNode);
-		this.getCamera().setScale(this.terrainBase.getCellWidth() * 8);
+		this.getCamera().setScale(this.terrainBase.getCellWidth() * 4);
 	}
 	
 	public void update(float delta) {

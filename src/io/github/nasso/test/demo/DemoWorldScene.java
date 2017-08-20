@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.joml.Vector2f;
 
 import io.github.nasso.nhengine.component.TileMapComponent;
+import io.github.nasso.nhengine.component.TileMapComponent.TileSet;
 import io.github.nasso.nhengine.component.TiledSpriteComponent;
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.core.GameWindow;
@@ -24,37 +25,37 @@ public class DemoWorldScene extends Scene {
 	private Node player;
 	private float playerHeight = 1f; // W / H
 	
-	private Texture2D basicTiles;
+	private TileSet basicTiles;
 	private Texture2D characterTiles;
 	
 	private TiledSpriteComponent characterTilesComp;
 	
-	private TiledSpriteComponent grass;
-	private TiledSpriteComponent heavyGrass;
-	private TiledSpriteComponent water;
+	private int grass;
+	private int heavyGrass;
+	private int water;
 	
-	private TiledSpriteComponent tree;
+	private int tree;
 	
 	// Water borders:
-	private TiledSpriteComponent wgTop;
-	private TiledSpriteComponent wgBot;
-	private TiledSpriteComponent wgLeft;
-	private TiledSpriteComponent wgRight;
+	private int wgTop;
+	private int wgBot;
+	private int wgLeft;
+	private int wgRight;
 	// ..
-	private TiledSpriteComponent wgTopLeft;
-	private TiledSpriteComponent wgTopRight;
-	private TiledSpriteComponent wgBotLeft;
-	private TiledSpriteComponent wgBotRight;
+	private int wgTopLeft;
+	private int wgTopRight;
+	private int wgBotLeft;
+	private int wgBotRight;
 	// ..
-	private TiledSpriteComponent wgTopLeftBot;
-	private TiledSpriteComponent wgTopRightBot;
-	private TiledSpriteComponent wgLeftBotRight;
-	private TiledSpriteComponent wgLeftTopRight;
+	private int wgTopLeftBot;
+	private int wgTopRightBot;
+	private int wgLeftBotRight;
+	private int wgLeftTopRight;
 	// ..
-	private TiledSpriteComponent wgLeftRight;
-	private TiledSpriteComponent wgTopBot;
+	private int wgLeftRight;
+	private int wgTopBot;
 	// ..
-	private TiledSpriteComponent wgAll;
+	private int wgAll;
 	// ---------------------------------------------
 	
 	private Vector2f frameSize = new Vector2f();
@@ -63,37 +64,37 @@ public class DemoWorldScene extends Scene {
 		super("World Scene");
 		
 		try {
-			this.basicTiles = TextureIO.loadTexture2D("res/demo/textures/basictiles.png", 4, false, false, false, true);
+			this.basicTiles = new TileSet(TextureIO.loadTexture2D("res/demo/textures/basictiles.png", 4, false, false, false, true), 8, 14);
 			
 			this.characterTiles = TextureIO.loadTexture2D("res/demo/textures/cyber_kid.png", 4, false, false, false, true);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
 		
-		this.tree = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 6, 4);
-		this.grass = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 0, 8);
-		this.heavyGrass = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 1, 8);
-		this.water = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 5, 1);
+		this.tree = this.basicTiles.getTileIDAt(6, 4);
+		this.grass = this.basicTiles.getTileIDAt(0, 8);
+		this.heavyGrass = this.basicTiles.getTileIDAt(1, 8);
+		this.water = this.basicTiles.getTileIDAt(5, 1);
 		// ..
-		this.wgTop = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 1, 3);
-		this.wgBot = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 1, 5);
-		this.wgLeft = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 0, 4);
-		this.wgRight = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 2, 4);
+		this.wgTop = this.basicTiles.getTileIDAt(1, 3);
+		this.wgBot = this.basicTiles.getTileIDAt(1, 5);
+		this.wgLeft = this.basicTiles.getTileIDAt(0, 4);
+		this.wgRight = this.basicTiles.getTileIDAt(2, 4);
 		// ..
-		this.wgTopLeft = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 0, 3);
-		this.wgTopRight = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 2, 3);
-		this.wgBotLeft = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 0, 5);
-		this.wgBotRight = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 2, 5);
+		this.wgTopLeft = this.basicTiles.getTileIDAt(0, 3);
+		this.wgTopRight = this.basicTiles.getTileIDAt(2, 3);
+		this.wgBotLeft = this.basicTiles.getTileIDAt(0, 5);
+		this.wgBotRight = this.basicTiles.getTileIDAt(2, 5);
 		// ..
-		this.wgTopLeftBot = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 0, 12);
-		this.wgTopRightBot = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 1, 12);
-		this.wgLeftBotRight = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 0, 13);
-		this.wgLeftTopRight = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 1, 13);
+		this.wgTopLeftBot = this.basicTiles.getTileIDAt(0, 12);
+		this.wgTopRightBot = this.basicTiles.getTileIDAt(1, 12);
+		this.wgLeftBotRight = this.basicTiles.getTileIDAt(0, 13);
+		this.wgLeftTopRight = this.basicTiles.getTileIDAt(1, 13);
 		// ..
-		this.wgLeftRight = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 2, 13);
-		this.wgTopBot = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 2, 12);
+		this.wgLeftRight = this.basicTiles.getTileIDAt(2, 13);
+		this.wgTopBot = this.basicTiles.getTileIDAt(2, 12);
 		// ..
-		this.wgAll = new TiledSpriteComponent(DemoWorldScene.this.basicTiles, 8, 14, 2, 11);
+		this.wgAll = this.basicTiles.getTileIDAt(2, 11);
 		
 		this.characterTilesComp = new TiledSpriteComponent(this.characterTiles, 4, 4, 0, 2);
 		this.characterTilesComp.setOpaque(false);
@@ -108,18 +109,18 @@ public class DemoWorldScene extends Scene {
 		float grassLevel = 0.7f;
 		float treeLevel = 0.75f;
 		
-		this.terrainBase = new TileMapComponent(this.terrainSize, this.terrainSize, 1, 1);
-		
-		this.terrainDecorationLayer = new TileMapComponent(this.terrainSize, this.terrainSize, 1, 1);
+		this.terrainBase = new TileMapComponent(DemoWorldScene.this.basicTiles, this.terrainSize, this.terrainSize, 1, 1);
+		this.terrainDecorationLayer = new TileMapComponent(DemoWorldScene.this.basicTiles, this.terrainSize, this.terrainSize, 1, 1);
+		this.terrainDecorationLayer.setOpaque(false);
 		
 		for(int x = 0; x < this.terrainSize; x++) {
 			for(int y = 0; y < this.terrainSize; y++) {
 				float c = p.getValueAt(x, y);
 				
-				if(c < waterLevel) this.terrainBase.setSpriteComponent(x, y, DemoWorldScene.this.water);
-				else if(c < grassLevel) this.terrainBase.setSpriteComponent(x, y, DemoWorldScene.this.grass);
-				else if(c < treeLevel) this.terrainBase.setSpriteComponent(x, y, DemoWorldScene.this.heavyGrass);
-				else this.terrainBase.setSpriteComponent(x, y, DemoWorldScene.this.grass);
+				if(c < waterLevel) this.terrainBase.setTileAt(x, y, DemoWorldScene.this.water);
+				else if(c < grassLevel) this.terrainBase.setTileAt(x, y, DemoWorldScene.this.grass);
+				else if(c < treeLevel) this.terrainBase.setTileAt(x, y, DemoWorldScene.this.heavyGrass);
+				else this.terrainBase.setTileAt(x, y, DemoWorldScene.this.grass);
 				
 				if(c < waterLevel) { // water
 					boolean ct = p.getValueAt(x, y - 1) > waterLevel;
@@ -127,23 +128,23 @@ public class DemoWorldScene extends Scene {
 					boolean cl = p.getValueAt(x - 1, y) > waterLevel;
 					boolean cr = p.getValueAt(x + 1, y) > waterLevel;
 					
-					if(ct && cb && cl && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgAll);
-					else if(ct && cl && cb && !cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgTopLeftBot);
-					else if(ct && !cl && cb && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgTopRightBot);
-					else if(!ct && cl && cb && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgLeftBotRight);
-					else if(ct && cl && !cb && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgLeftTopRight);
-					else if(!ct && cl && !cb && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgLeftRight);
-					else if(ct && !cl && cb && !cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgTopBot);
-					else if(ct && cl && !cb && !cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgTopLeft);
-					else if(ct && !cl && !cb && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgTopRight);
-					else if(!ct && cl && cb && !cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgBotLeft);
-					else if(!ct && !cl && cb && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgBotRight);
-					else if(ct && !cl && !cb && !cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgTop);
-					else if(!ct && cl && !cb && !cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgLeft);
-					else if(!ct && !cl && cb && !cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgBot);
-					else if(!ct && !cl && !cb && cr) this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.wgRight);
+					if(ct && cb && cl && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgAll);
+					else if(ct && cl && cb && !cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgTopLeftBot);
+					else if(ct && !cl && cb && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgTopRightBot);
+					else if(!ct && cl && cb && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgLeftBotRight);
+					else if(ct && cl && !cb && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgLeftTopRight);
+					else if(!ct && cl && !cb && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgLeftRight);
+					else if(ct && !cl && cb && !cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgTopBot);
+					else if(ct && cl && !cb && !cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgTopLeft);
+					else if(ct && !cl && !cb && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgTopRight);
+					else if(!ct && cl && cb && !cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgBotLeft);
+					else if(!ct && !cl && cb && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgBotRight);
+					else if(ct && !cl && !cb && !cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgTop);
+					else if(!ct && cl && !cb && !cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgLeft);
+					else if(!ct && !cl && cb && !cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgBot);
+					else if(!ct && !cl && !cb && cr) this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.wgRight);
 				} else if(c > treeLevel) {
-					this.terrainDecorationLayer.setSpriteComponent(x, y, DemoWorldScene.this.tree);
+					this.terrainDecorationLayer.setTileAt(x, y, DemoWorldScene.this.tree);
 				}
 			}
 		}

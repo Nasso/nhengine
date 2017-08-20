@@ -17,7 +17,6 @@ import io.github.nasso.nhengine.component.SpriteComponent;
 import io.github.nasso.nhengine.component.TileMapComponent;
 import io.github.nasso.nhengine.graphics.Renderer;
 import io.github.nasso.nhengine.graphics.TextureData;
-import io.github.nasso.nhengine.level.Camera;
 import io.github.nasso.nhengine.level.Component;
 import io.github.nasso.nhengine.level.Level;
 import io.github.nasso.nhengine.level.Node;
@@ -25,17 +24,14 @@ import io.github.nasso.nhengine.level.Scene;
 
 public class OGLRenderer extends Renderer {
 	private OGLSpriteRenderer spriteRenderer;
+	private OGLTileMapRenderer tileMapRenderer;
 	private OGLCanvasRenderer canvasRenderer;
 	
 	private OGLArrayBuffer rectPosVBO;
 	
 	private List<Component> componentsPool = new ArrayList<Component>();
-	private List<Component> terrainComponentsPool = new ArrayList<Component>();
 	
 	private Comparator<Component> painterSort;
-	
-	private SpriteComponent[] sprite_instancesList = new SpriteComponent[OGLSpriteRenderer.MAX_INSTANCES];
-	private float[] sprite_gridXYPositionOffset = new float[OGLSpriteRenderer.MAX_INSTANCES * 2];
 	
 	public OGLRenderer(int width, int height) throws IOException {
 		super(width, height);
@@ -48,6 +44,7 @@ public class OGLRenderer extends Renderer {
 		this.rectPosVBO.loadData(new float[] { 0f, 0f, 1f, 0f, 0f, 1f, 1f, 1f });
 		
 		this.spriteRenderer = new OGLSpriteRenderer(this.rectPosVBO, this.getWidth(), this.getHeight());
+		this.tileMapRenderer = new OGLTileMapRenderer(this.rectPosVBO, this.getWidth(), this.getHeight());
 		this.canvasRenderer = new OGLCanvasRenderer(this.rectPosVBO, this.getWidth(), this.getHeight());
 		
 		OGLArrayBuffer.unbindAll();
@@ -87,72 +84,15 @@ public class OGLRenderer extends Renderer {
 		this.canvasRenderer.resize(this.getWidth(), this.getHeight());
 	}
 	
-	private void renderTerrainComponent(Scene sce, TileMapComponent comp) {
-		Camera cam = sce.getCamera();
-		
-		float gridSizeX = comp.getSizeX() * cam.getScale();
-		float gridSizeY = comp.getSizeY() * cam.getScale();
-		
-		int cellStartX = (int) (cam.getPosition().x / comp.getCellWidth() - gridSizeX) - 1;
-		int cellStartY = (int) (cam.getPosition().y / comp.getCellHeight() - gridSizeY / cam.getAspectRatio()) - 1;
-		
-		int cellEndX = cellStartX + ((int) gridSizeX + 1) * 2 + 1;
-		int cellEndY = cellStartY + ((int) (gridSizeY / cam.getAspectRatio()) + 1) * 2 + 2;
-		
-		cellStartX = Math.max(cellStartX, 0);
-		cellStartY = Math.max(cellStartY, 0);
-		
-		cellEndX = Math.min(cellEndX, comp.getSizeX());
-		cellEndY = Math.min(cellEndY, comp.getSizeY());
-		
-		boolean iso = comp.isIsometric();
-		
-		// Instanced
-		int i = 0;
-		for(int y = cellStartY; y < cellEndY; y++) {
-			for(int x = cellStartX; x < cellEndX; x++) {
-				SpriteComponent c = comp.getSpriteComponent(x, y);
-				if(c == null || !c.isEnabled() || (!c.isOpaque() && c.getOpacity() == 0.0f)) continue;
-				
-				this.sprite_instancesList[i] = c;
-				
-				if(iso) {
-					this.sprite_gridXYPositionOffset[i * 2] = ((x - y) * comp.getCellWidth() * 0.5f - x);
-					this.sprite_gridXYPositionOffset[i * 2 + 1] = ((x + y) * comp.getCellHeight() * 0.5f - y);
-				} else {
-					this.sprite_gridXYPositionOffset[i * 2] = x * comp.getCellWidth();
-					this.sprite_gridXYPositionOffset[i * 2 + 1] = y * comp.getCellHeight();
-				}
-				
-				i++;
-				
-				if(i == OGLSpriteRenderer.MAX_INSTANCES) {
-					// TODO: Find a better way to do that, bc it'll upload the world matrix of the comp each call
-					// Maybe somethings like spriteRenderer.setTileMap(tilemap) and unsetTileMap() ?
-					this.spriteRenderer.render(sce, comp, this.sprite_instancesList, this.sprite_gridXYPositionOffset, i);
-					i = 0;
-				}
-			}
-		}
-		
-		if(i > 0) {
-			this.spriteRenderer.render(sce, comp, this.sprite_instancesList, this.sprite_gridXYPositionOffset, i);
-		}
-		
-		this.terrainComponentsPool.clear();
-	}
-	
 	private void renderComponent(Scene sce, Component aComp) {
 		if(aComp == null) return;
 		
 		if(aComp instanceof TileMapComponent) {
-			this.renderTerrainComponent(sce, (TileMapComponent) aComp);
+			this.tileMapRenderer.render(sce, (TileMapComponent) aComp);
 		} else if(aComp instanceof SpriteComponent) {
 			this.spriteRenderer.render(sce, (SpriteComponent) aComp);
-		} else {
-			if(aComp instanceof CanvasComponent) {
-				this.canvasRenderer.render(sce, (CanvasComponent) aComp);
-			}
+		} else if(aComp instanceof CanvasComponent) {
+			this.canvasRenderer.render(sce, (CanvasComponent) aComp);
 		}
 	}
 	
@@ -164,7 +104,7 @@ public class OGLRenderer extends Renderer {
 			Component c = comps.get(i);
 			if(!c.isEnabled()) continue;
 			
-			if(c instanceof DrawableComponent || c instanceof TileMapComponent) {
+			if(c instanceof DrawableComponent) {
 				this.componentsPool.add(c);
 			}
 		}
@@ -214,12 +154,10 @@ public class OGLRenderer extends Renderer {
 	}
 	
 	public void dispose() {
-		this.sprite_instancesList = null;
-		this.sprite_gridXYPositionOffset = null;
-		
 		this.rectPosVBO.dispose();
 		
 		this.spriteRenderer.dispose();
+		this.tileMapRenderer.dispose();
 		this.canvasRenderer.dispose();
 	}
 	

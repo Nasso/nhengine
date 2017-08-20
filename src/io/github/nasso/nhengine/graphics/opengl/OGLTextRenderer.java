@@ -28,7 +28,7 @@ public class OGLTextRenderer extends OGLComponentRenderer<TextComponent> {
 	
 	private Matrix4f _mat4 = new Matrix4f();
 	
-	private OGLTextProgram gbufferTextProgram;
+	private OGLTextProgram program;
 	
 	private OGLTextures textures = OGLTextures.get();
 	
@@ -46,7 +46,7 @@ public class OGLTextRenderer extends OGLComponentRenderer<TextComponent> {
 	public OGLTextRenderer(OGLArrayBuffer rectPosVBO, int width, int height) throws IOException {
 		super(width, height);
 		
-		this.gbufferTextProgram = new OGLTextProgram();
+		this.program = new OGLTextProgram();
 		
 		this.glyph_instPositionStartXYEndXYVBO = new OGLArrayBuffer(MAX_GLYPH_INSTANCES * 16, GL_STREAM_DRAW);
 		this.glyph_instTextureStartSTEndSTVBO = new OGLArrayBuffer(MAX_GLYPH_INSTANCES * 16, GL_STREAM_DRAW);
@@ -97,19 +97,19 @@ public class OGLTextRenderer extends OGLComponentRenderer<TextComponent> {
 		if(text == null) return;
 		if(text.length() <= 0) return;
 		
-		this.gbufferTextProgram.use();
+		this.program.use();
 		
 		OGLStateManager.INSTANCE.blend(!opaque);
 		
-		this.gbufferTextProgram.loadToUniform("fontTexture", this.textures.update(font.getTexture()), 0);
-		this.gbufferTextProgram.loadToUniform("projViewModel3", transform);
-		this.gbufferTextProgram.loadToUniform("scaleXY", scaleX, scaleY);
-		this.gbufferTextProgram.loadToUniform("cvsMode", true);
-		this.gbufferTextProgram.loadToUniform("clip.enabled", !clip.isNull);
+		this.program.loadToUniform("fontTexture", this.textures.update(font.getTexture()), 0);
+		this.program.loadToUniform("projViewModel3", transform);
+		this.program.loadToUniform("scaleXY", scaleX, scaleY);
+		this.program.loadToUniform("cvsMode", true);
+		this.program.loadToUniform("clip.enabled", !clip.isNull);
 		
 		if(!clip.isNull) {
-			this.gbufferTextProgram.loadToUniform("clip.xform", clip.xform);
-			this.gbufferTextProgram.loadToUniform("clip.extent", clip.extent);
+			this.program.loadToUniform("clip.xform", clip.xform);
+			this.program.loadToUniform("clip.extent", clip.extent);
 		}
 		
 		this.renderChunks(text, x, y, transform, null, font, align, baseline, fillColor, strokeColor, clip, alpha, opaque);
@@ -121,14 +121,14 @@ public class OGLTextRenderer extends OGLComponentRenderer<TextComponent> {
 		if(text == null) return;
 		if(text.length() <= 0) return;
 		
-		this.gbufferTextProgram.use();
+		this.program.use();
 		
 		OGLStateManager.INSTANCE.blend(!opaque);
 		
-		this.gbufferTextProgram.loadToUniform("fontTexture", this.textures.update(font.getTexture()), 0);
-		this.gbufferTextProgram.loadToUniform("projViewModel", transform);
-		this.gbufferTextProgram.loadToUniform("cvsMode", false);
-		this.gbufferTextProgram.loadToUniform("clip.enabled", false);
+		this.program.loadToUniform("fontTexture", this.textures.update(font.getTexture()), 0);
+		this.program.loadToUniform("projViewModel", transform);
+		this.program.loadToUniform("cvsMode", false);
+		this.program.loadToUniform("clip.enabled", false);
 		
 		this.renderChunks(text, x, y, null, transform, font, align, baseline, fillColor, strokeColor, null, alpha, opaque);
 	}
@@ -278,6 +278,6 @@ public class OGLTextRenderer extends OGLComponentRenderer<TextComponent> {
 		this.glyph_instTextureStartSTEndSTVBO.dispose();
 		this.glyph_letterDiffuseColorAlphaVBO.dispose();
 		
-		this.gbufferTextProgram.dispose();
+		this.program.dispose();
 	}
 }
