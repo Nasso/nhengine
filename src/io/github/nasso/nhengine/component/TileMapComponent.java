@@ -6,6 +6,11 @@ import java.util.List;
 import io.github.nasso.nhengine.graphics.Texture2D;
 import io.github.nasso.nhengine.utils.Box2D;
 
+/**
+ * A tile map component displays a map made with one of more tile-set(s) and one or more layer(s).
+ * 
+ * @author nasso
+ */
 public class TileMapComponent extends DrawableComponent {
 	public static class TileSet {
 		private Texture2D texture;
