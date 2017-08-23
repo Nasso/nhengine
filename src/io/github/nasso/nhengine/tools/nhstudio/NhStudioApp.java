@@ -18,7 +18,6 @@ import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewRoomDialog;
 import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewScriptDialog;
 import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewSoundDialog;
 import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewSpriteDialog;
-import io.github.nasso.nhengine.tools.nhstudio.game.Room;
 import io.github.nasso.nhengine.ui.UICanvas;
 import io.github.nasso.nhengine.ui.UIComponent;
 import io.github.nasso.nhengine.ui.UIContainer;
@@ -30,9 +29,9 @@ import io.github.nasso.nhengine.ui.control.UIMenuItem;
 import io.github.nasso.nhengine.ui.control.UIMenuSeparator;
 import io.github.nasso.nhengine.ui.control.UIPopupMenu;
 import io.github.nasso.nhengine.ui.control.UIScrollPane;
+import io.github.nasso.nhengine.ui.control.UIScrollPane.BarPolicy;
 import io.github.nasso.nhengine.ui.control.UISeparator;
 import io.github.nasso.nhengine.ui.control.UITabbedPane;
-import io.github.nasso.nhengine.ui.control.UIScrollPane.BarPolicy;
 import io.github.nasso.nhengine.ui.layout.UIBorderLayout;
 import io.github.nasso.nhengine.ui.layout.UIBoxLayout;
 import io.github.nasso.nhengine.utils.TimeManager;
@@ -273,9 +272,5 @@ public class NhStudioApp {
 		content.add(this.tabs, UIBorderLayout.CENTER);
 		
 		this.tabs.insertTab("Welcome", new UILabel("Welcome to Nhengine Studio 1.0", UILabel.ANCHOR_CENTER, FontStyle.BOLD));
-	}
-	
-	public void addRoom(Room room) {
-		// content.add(new UILabel("New thing", UILabel.ANCHOR_LEFT));
 	}
 }
