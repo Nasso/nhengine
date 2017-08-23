@@ -12,6 +12,11 @@ import io.github.nasso.nhengine.utils.Box2D;
  * @author nasso
  */
 public class TileMapComponent extends DrawableComponent {
+	/**
+	 * A tile-set consists of a texture, containing multiple "tiles", in a fixed-size grid.
+	 * 
+	 * @author nasso
+	 */
 	public static class TileSet {
 		private Texture2D texture;
 		private int columns, rows;
@@ -26,23 +31,47 @@ public class TileMapComponent extends DrawableComponent {
 			this.firstgid = firstgid;
 		}
 		
+		/**
+		 * @param id
+		 * @return True if the given global ID is in this tile-set.
+		 */
 		public boolean containsGlobalID(int id) {
 			return id >= 0 && id < this.getTileCount();
 		}
 		
+		/**
+		 * Returns the global ID for the tile located at the specified location in the tile-set.
+		 * The returned ID can then be used to reference this tile in the map.
+		 * 
+		 * @param x The column of the requested tile in the tile-set (first column is 0).
+		 * @param y The row of the requested tile in the tile-set (first row is 0).
+		 * @return The global tile ID of the requested tile.
+		 */
 		public int getTileID(int x, int y) {
 			if(x < 0 || x >= this.columns || y < 0 || y > this.rows) return -1;
 			
 			return this.firstgid + y * this.columns + x;
 		}
 		
+		/**
+		 * Returns the column corresponding to the given global tile ID in this tile-set. If the given ID isn't in this tile-set, it returns -1.
+		 * 
+		 * @param id The global tile ID
+		 * @return The column of the tile in the tile-set, or -1.
+		 */
 		public int getTileColumn(int id) {
 			if(!this.containsGlobalID(id)) return -1;
 			id -= this.firstgid;
 			
 			return id % this.columns;
 		}
-		
+
+		/**
+		 * Returns the row corresponding to the given global tile ID in this tile-set. If the given ID isn't in this tile-set, it returns -1.
+		 * 
+		 * @param id The global tile ID
+		 * @return The row of the tile in the tile-set, or -1.
+		 */
 		public int getTileRow(int id) {
 			if(!this.containsGlobalID(id)) return -1;
 			id -= this.firstgid;
@@ -50,26 +79,45 @@ public class TileMapComponent extends DrawableComponent {
 			return id / this.columns;
 		}
 		
+		/**
+		 * @return The current texture bound to this tile-set.
+		 */
 		public Texture2D getTexture() {
 			return this.texture;
 		}
 		
+		/**
+		 * @return The number of columns in this tile-set.
+		 */
 		public int getColumns() {
 			return this.columns;
 		}
 		
+		/**
+		 * @return The number of rows in this tile-set.
+		 */
 		public int getRows() {
 			return this.rows;
 		}
 		
+		/**
+		 * Disposes this tile-set. <strong>The texture currently attached to it is also disposed!</strong><br>
+		 * Actually the only thing it does is disposing the texture.
+		 */
 		public void dispose() {
 			this.texture.dispose();
 		}
 		
+		/**
+		 * @return The global ID of the first tile present in this tile-set.
+		 */
 		public int getFirstGlobalID() {
 			return this.firstgid;
 		}
 		
+		/**
+		 * @return The number of tiles in this tile-set. It is equal to <code>columns * rows</code>.
+		 */
 		public int getTileCount() {
 			return this.columns * this.rows;
 		}
