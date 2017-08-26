@@ -18,8 +18,17 @@
  "tileheight":32,
  "tilesets":[
         {
+         "columns":10,
          "firstgid":1,
-         "source":"tileset.json"
+         "image":"iso-64x64-building_3.png",
+         "imageheight":512,
+         "imagewidth":640,
+         "margin":0,
+         "name":"iso-64x64-building_3",
+         "spacing":0,
+         "tilecount":80,
+         "tileheight":64,
+         "tilewidth":64
         }],
  "tilewidth":64,
  "type":"map",

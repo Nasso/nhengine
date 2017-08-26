@@ -19,7 +19,7 @@ public abstract class Font extends Observable implements Disposable, Cloneable {
 	public abstract float getHeight();
 	
 	public abstract float getSize();
-	
+
 	public abstract Font clone();
 	
 	public abstract void dispose();

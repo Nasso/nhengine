@@ -27,6 +27,8 @@ public class TrueTypeFont extends Font {
 	private static final short START_TEXTURE_SCALE = 8; // 256*256
 	private static final short MAX_TEXTURE_SCALE = 12; // 4096*4096
 	
+	private float glyphSpacing = 0, lineSpacing = 0;
+	
 	private float scale, size, ascent, descent, lineGap;
 	private short textureScale = START_TEXTURE_SCALE;
 	
@@ -302,7 +304,7 @@ public class TrueTypeFont extends Font {
 	}
 	
 	public float getLineGap() {
-		return this.lineGap;
+		return this.lineGap + this.getLineSpacing();
 	}
 	
 	public float getHeight() {
@@ -339,7 +341,23 @@ public class TrueTypeFont extends Font {
 		this.fontInfo = null;
 	}
 	
-	private static class TTFontPackedGlyph extends Font.FontPackedGlyph {
+	public float getGlyphSpacing() {
+		return this.glyphSpacing;
+	}
+
+	public void setGlyphSpacing(float glyphSpacing) {
+		this.glyphSpacing = glyphSpacing;
+	}
+
+	public float getLineSpacing() {
+		return this.lineSpacing;
+	}
+
+	public void setLineSpacing(float lineSpacing) {
+		this.lineSpacing = lineSpacing;
+	}
+
+	private class TTFontPackedGlyph extends Font.FontPackedGlyph {
 		ByteBuffer bitmap;
 		
 		boolean packed = false;
@@ -384,7 +402,7 @@ public class TrueTypeFont extends Font {
 		}
 		
 		public float xadvance() {
-			return this.xadvance;
+			return this.xadvance + TrueTypeFont.this.getGlyphSpacing();
 		}
 	}
 }
