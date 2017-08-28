@@ -42,7 +42,7 @@ public class SoundTestRoom implements GameRunner {
 		this.win = this.game.window();
 		
 		try {
-			this.snd = Sound.load("res/demo/audio/mus_story.wav", true);
+			this.snd = Sound.load("res/demo/audio/mus_story.ogg", true);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
