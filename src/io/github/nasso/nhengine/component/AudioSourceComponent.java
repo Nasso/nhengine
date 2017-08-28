@@ -14,14 +14,14 @@ public class AudioSourceComponent extends Component {
 	 * 
 	 * @author nasso
 	 */
-	public enum Status {
-		PLAYING, PAUSING, PAUSED, STOPPING, STOPPED, RESTARTING
+	public static enum Status {
+		PLAYING, PAUSED, STOPPED
 	}
 	
 	private Sound sound;
 	private Status status = Status.STOPPED;
 	
-	private float currentTime = 0;
+	private float startTime = 0;
 	private float pitch = 1;
 	private float gain = 1;
 	private float minGain = 0;
@@ -35,7 +35,7 @@ public class AudioSourceComponent extends Component {
 	 * Equivalent to:<br>
 	 * 
 	 * <pre>
-	 * src.setCurrentTime(time);
+	 * src.setStartTime(time);
 	 * src.setPitch(pitch);
 	 * src.play();
 	 * </pre>
@@ -46,7 +46,7 @@ public class AudioSourceComponent extends Component {
 	 *            The pitch
 	 */
 	public void play(float time, float pitch) {
-		this.setCurrentTime(time);
+		this.setStartTime(time);
 		this.setPitch(pitch);
 		this.play();
 	}
@@ -56,7 +56,7 @@ public class AudioSourceComponent extends Component {
 	 * Equivalent to:
 	 * 
 	 * <pre>
-	 * src.setCurrentTime(time);
+	 * src.setStartTime(time);
 	 * src.play();
 	 * </pre>
 	 * 
@@ -64,15 +64,15 @@ public class AudioSourceComponent extends Component {
 	 *            The start time in seconds
 	 */
 	public void play(float time) {
-		this.setCurrentTime(time);
+		this.setStartTime(time);
 		this.play();
 	}
 	
 	/**
-	 * Plays the sound, starting from the current time, with the current pitch.
+	 * Plays the sound, starting from the current start time, with the current pitch.
 	 */
 	public void play() {
-		if(this.sound != null) this.status = (this.status == Status.PLAYING ? Status.RESTARTING : Status.PLAYING);
+		if(this.sound != null) this.status = Status.PLAYING;
 		this.version++;
 	}
 	
@@ -80,7 +80,7 @@ public class AudioSourceComponent extends Component {
 	 * Pauses
 	 */
 	public void pause() {
-		if(this.sound != null) this.status = Status.PAUSING;
+		if(this.sound != null) this.status = Status.PAUSED;
 		this.version++;
 	}
 	
@@ -88,7 +88,7 @@ public class AudioSourceComponent extends Component {
 	 * Stops
 	 */
 	public void stop() {
-		this.status = Status.STOPPING;
+		this.status = Status.STOPPED;
 		this.version++;
 	}
 	
@@ -139,7 +139,7 @@ public class AudioSourceComponent extends Component {
 	 */
 	public void setSound(Sound sound) {
 		this.sound = sound;
-		this.status = Status.STOPPING;
+		this.status = Status.STOPPED;
 		this.version++;
 	}
 	
@@ -225,17 +225,17 @@ public class AudioSourceComponent extends Component {
 	}
 	
 	/**
-	 * @return The current time in seconds
+	 * @return The start time in seconds
 	 */
-	public float getCurrentTime() {
-		return this.currentTime;
+	public float getStartTime() {
+		return this.startTime;
 	}
 	
 	/**
-	 * @param currentTime
-	 *            The target time in seconds
+	 * @param startTime
+	 *            The start time in seconds
 	 */
-	public void setCurrentTime(float currentTime) {
-		this.currentTime = currentTime;
+	public void setStartTime(float startTime) {
+		this.startTime = startTime;
 	}
 }

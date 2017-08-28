@@ -11,8 +11,9 @@ import io.github.nasso.nhengine.event.Observable;
 
 public class OALBuffers {
 	private Map<Sound, OALBuffer> buffers = new HashMap<Sound, OALBuffer>();
+	private Map<Sound, OALBufferQueue> bufferQueues = new HashMap<Sound, OALBufferQueue>();
 	
-	private Consumer<Observable> bufDisposer;
+	private Consumer<Observable> bufDisposer, bufQueueDisposer;
 	
 	private static OALBuffers INSTANCE;
 	
@@ -32,6 +33,15 @@ public class OALBuffers {
 			}
 			
 			buf.removeEventListener("dispose", this.bufDisposer);
+		};
+		
+		this.bufQueueDisposer = (buf) -> {
+			if(this.bufferQueues.containsKey(buf)) {
+				this.bufferQueues.get(buf).dispose();
+				this.bufferQueues.remove(buf);
+			}
+			
+			buf.removeEventListener("dispose", this.bufQueueDisposer);
 		};
 	}
 	
@@ -82,6 +92,25 @@ public class OALBuffers {
 			
 			buf.addEventListener("dispose", this.bufDisposer);
 			this.buffers.put(buf, oalBuf);
+		}
+		
+		return oalBuf;
+	}
+	
+	public OALBufferQueue getQueue(Sound buf) {
+		if(buf == null) return null;
+		
+		OALBufferQueue oalBuf = this.bufferQueues.get(buf);
+		
+		if(oalBuf == null) {
+			int format = this.getALFormat(buf);
+			if(format == 0) return null;
+			
+			oalBuf = new OALBufferQueue();
+			oalBuf.setData(buf.getData(), format, buf.getSampleRate());
+			
+			buf.addEventListener("dispose", this.bufQueueDisposer);
+			this.bufferQueues.put(buf, oalBuf);
 		}
 		
 		return oalBuf;

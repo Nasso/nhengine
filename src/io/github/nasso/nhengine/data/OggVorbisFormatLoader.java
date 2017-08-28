@@ -37,11 +37,14 @@ public class OggVorbisFormatLoader implements AudioFormatLoader {
 			sampleCount = stb_vorbis_stream_length_in_samples(decoder);
 			sampleRate = info.sample_rate();
 			
-			data = BufferUtils.createByteBuffer(sampleCount * 2); // multiply by 2 bc short = 2 bytes
+			data = BufferUtils.createByteBuffer(sampleCount * 2 * channels); // multiply by 2 bc short = 2 bytes
 			data.limit(stb_vorbis_get_samples_short_interleaved(decoder, channels, data.asShortBuffer()) * channels);
 			
 			stb_vorbis_close(decoder);
 		}
+		
+		// 14115072
+		// 7057536
 		
 		return new Sound(data, channels, sampleRate, 16, sampleCount);
 	}

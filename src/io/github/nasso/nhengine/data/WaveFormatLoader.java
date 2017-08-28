@@ -109,7 +109,10 @@ public class WaveFormatLoader implements AudioFormatLoader {
 			
 			byte buf[] = new byte[2048];
 			int numRead = 0;
-			while((numRead = in.read(buf)) != -1) {
+			int numToRead = 0;
+			while((numToRead = Math.min(buf.length, data.samples.remaining())) != 0) {
+				numRead = in.read(buf, 0, numToRead);
+				
 				if(data.bigEndian) {
 					if(data.bitsPerSample == 8) {
 						for(int i = 0; i < numRead; i += 2) {
@@ -154,7 +157,6 @@ public class WaveFormatLoader implements AudioFormatLoader {
 			
 			if(data.isValid) snd = new Sound(data.samples, data.channels, data.sampleRate, data.bitsPerSample, data.sampleCount);
 			else System.err.println("Error: '" + fileName + "' isn't a valid WAVE file: " + data.error);
-			
 		} catch(IOException e1) {
 			e1.printStackTrace();
 		}

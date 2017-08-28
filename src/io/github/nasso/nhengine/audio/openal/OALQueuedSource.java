@@ -6,9 +6,7 @@ import static org.lwjgl.openal.AL11.*;
 
 import org.joml.Vector3f;
 
-import io.github.nasso.nhengine.utils.TimeManager;
-
-public class OALSource {
+public class OALQueuedSource {
 	private int id;
 	private float pitch;
 	private float gain;
@@ -18,14 +16,13 @@ public class OALSource {
 	private Vector3f velocity = new Vector3f();
 	private Vector3f direction = new Vector3f();
 	private boolean looping;
-	private OALBuffer buffer;
+	private OALBufferQueue queue;
 	
-	private float currentTime = 0;
-	private float lastStepTime = 0;
+	private boolean playing = false;
 	
 	private int version = -1;
 	
-	public OALSource() {
+	public OALQueuedSource() {
 		this.id = alGenSources();
 		
 		this.pitch = alGetSourcef(this.id, AL_PITCH);
@@ -42,17 +39,26 @@ public class OALSource {
 		this.direction.set(v3[0], v3[1], v3[2]);
 		
 		this.looping = alGetSourcei(this.id, AL_LOOPING) == AL_TRUE;
-		this.buffer = null;
-		
-		this.lastStepTime = TimeManager.getTimeSec();
+		this.queue = null;
 	}
 	
 	public void play() {
 		alSourcePlay(this.id);
+		this.playing = true;
+	}
+	
+	public void pause() {
+		if(this.playing) {
+			alSourcePause(this.id);
+			this.playing = false;
+		}
 	}
 	
 	public void stop() {
-		alSourceStop(this.id);
+		if(this.playing) {
+			alSourceStop(this.id);
+			this.playing = false;
+		}
 	}
 	
 	public void rewind() {
@@ -115,37 +121,39 @@ public class OALSource {
 		alSourcei(this.id, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
 	}
 	
-	public void setBuffer(OALBuffer buffer) {
-		if(this.buffer == buffer) return;
+	public void step() {
+		int processed = alGetSourcei(this.id, AL_BUFFERS_PROCESSED);
 		
-		this.buffer = buffer;
+		while(processed > 0) {
+			int buf = alSourceUnqueueBuffers(this.id);
+			this.queue.flip();
+			
+			if(!this.queue.reachedTheEnd()) alSourceQueueBuffers(this.id, buf);
+			
+			processed--;
+		}
+	}
+	
+	public void setBuffer(OALBufferQueue buffer) {
+		if(this.queue == buffer) return;
 		
-		if(buffer != null) alSourcei(this.id, AL_BUFFER, buffer.id);
-		else alSourcei(this.id, AL_BUFFER, 0);
+		this.queue = buffer;
+		
+		if(buffer != null) {
+			for(int i = 0; i < OALBufferQueue.QUEUE_SIZE; i++) {
+				alSourceQueueBuffers(this.id, buffer.getBufferID(i));
+			}
+		} else alSourcei(this.id, AL_BUFFER, 0);
 		
 		this.setCurrentTime(0);
 	}
 	
 	public void setCurrentTime(float currentTime) {
-		if(this.buffer != null) {
-			alSourcei(this.id, AL_SAMPLE_OFFSET, (int) min(this.buffer.getFrequency() * currentTime, this.buffer.getSampleSize()));
-			
-			this.currentTime = currentTime;
-		}
+		if(this.queue != null) alSourcei(this.id, AL_SAMPLE_OFFSET, (int) min(this.queue.getFrequency() * currentTime, this.queue.getSampleSize()));
 	}
 	
 	public float getCurrentTime() {
-		return this.currentTime;
-	}
-	
-	public void step() {
-		float time = TimeManager.getTimeSec();
-		
-		if(this.getSourceState() == AL_PLAYING) {
-			this.currentTime += time - this.lastStepTime;
-		}
-		
-		this.lastStepTime = time;
+		return (float) alGetSourcei(this.id, AL_SAMPLE_OFFSET) / this.queue.getFrequency();
 	}
 	
 	public int getID() {
@@ -184,8 +192,8 @@ public class OALSource {
 		return this.looping;
 	}
 	
-	public OALBuffer getBuffer() {
-		return this.buffer;
+	public OALBufferQueue getQueue() {
+		return this.queue;
 	}
 	
 	public int getSourceState() {
