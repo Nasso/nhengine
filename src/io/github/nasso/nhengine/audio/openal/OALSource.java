@@ -6,8 +6,6 @@ import static org.lwjgl.openal.AL11.*;
 
 import org.joml.Vector3f;
 
-import io.github.nasso.nhengine.utils.TimeManager;
-
 public class OALSource {
 	private int id;
 	private float pitch;
@@ -19,11 +17,6 @@ public class OALSource {
 	private Vector3f direction = new Vector3f();
 	private boolean looping;
 	private OALBuffer buffer;
-	
-	private float currentTime = 0;
-	private float lastStepTime = 0;
-	
-	private int version = -1;
 	
 	public OALSource() {
 		this.id = alGenSources();
@@ -43,12 +36,14 @@ public class OALSource {
 		
 		this.looping = alGetSourcei(this.id, AL_LOOPING) == AL_TRUE;
 		this.buffer = null;
-		
-		this.lastStepTime = TimeManager.getTimeSec();
 	}
 	
 	public void play() {
 		alSourcePlay(this.id);
+	}
+	
+	public void pause() {
+		alSourcePause(this.id);
 	}
 	
 	public void stop() {
@@ -129,23 +124,7 @@ public class OALSource {
 	public void setCurrentTime(float currentTime) {
 		if(this.buffer != null) {
 			alSourcei(this.id, AL_SAMPLE_OFFSET, (int) min(this.buffer.getFrequency() * currentTime, this.buffer.getSampleSize()));
-			
-			this.currentTime = currentTime;
 		}
-	}
-	
-	public float getCurrentTime() {
-		return this.currentTime;
-	}
-	
-	public void step() {
-		float time = TimeManager.getTimeSec();
-		
-		if(this.getSourceState() == AL_PLAYING) {
-			this.currentTime += time - this.lastStepTime;
-		}
-		
-		this.lastStepTime = time;
 	}
 	
 	public int getID() {
@@ -199,13 +178,5 @@ public class OALSource {
 	public void dispose() {
 		alDeleteSources(this.id);
 		this.id = 0;
-	}
-	
-	public int getVersion() {
-		return this.version;
-	}
-	
-	public void setVersion(int version) {
-		this.version = version;
 	}
 }

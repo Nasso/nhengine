@@ -149,7 +149,6 @@ public class Game {
 					
 					this.inputManager.processInput(this.currentLevel);
 					if(!this.window.isMinified()) this.renderer.render(this.currentLevel);
-					this.audioPlayer.audioStep(this.currentLevel);
 				}
 				
 				this.window.swapBuffers();

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import io.github.nasso.nhengine.audio.Sound;
 import io.github.nasso.nhengine.component.AudioSourceComponent;
-import io.github.nasso.nhengine.component.AudioSourceComponent.Status;
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.core.GameRunner;
 import io.github.nasso.nhengine.core.GameWindow;
@@ -24,7 +23,7 @@ public class SoundTestRoom implements GameRunner {
 	private Scene sce = new Scene();
 	private AudioSourceComponent audioSource = new AudioSourceComponent();
 	
-	private Sound snd;
+	private Sound sndA, sndB;
 	private GameWindow win;
 	
 	public SoundTestRoom() {
@@ -42,14 +41,16 @@ public class SoundTestRoom implements GameRunner {
 		this.win = this.game.window();
 		
 		try {
-			this.snd = Sound.load("res/demo/audio/mus_story.ogg", true);
+			this.sndA = Sound.load("res/demo/audio/mus_story.ogg", true);
+			this.sndB = Sound.load("res/demo/audio/mus_intronoise.ogg", true);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
 		
-		this.audioSource.setSound(this.snd);
+		this.audioSource.setSound(this.sndA);
 		this.audioSource.setLooping(false);
-		this.audioSource.setPitch(0.9f);
+		this.audioSource.setPitch(0.91092446f);
+		this.audioSource.play();
 		
 		this.sce.getRoot().addComponent(this.audioSource);
 		
@@ -60,8 +61,9 @@ public class SoundTestRoom implements GameRunner {
 	
 	public void update(float delta) {
 		if(this.win.isKeyPressed(Nhengine.KEY_SPACE)) {
-			if(this.audioSource.getStatus() == Status.PLAYING) this.audioSource.pause(); 
-			else this.audioSource.play();
+			this.audioSource.stop();
+			this.audioSource.setSound(this.sndB);
+			this.audioSource.play(0, 1);
 		}
 		
 		if(this.win.isKeyPressed(Nhengine.KEY_S)) {

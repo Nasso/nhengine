@@ -1,7 +1,5 @@
 package io.github.nasso.nhengine.audio.openal;
 
-import static org.lwjgl.openal.AL10.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -55,7 +53,7 @@ public class OALSources {
 		this.queuedSources.clear();
 	}
 
-	public OALSource update(AudioSourceComponent src) {
+	public OALSource get(AudioSourceComponent src) {
 		if(src == null) return null;
 		
 		OALSource oalSrc = this.sources.get(src);
@@ -68,41 +66,6 @@ public class OALSources {
 		} else if(oalSrc != null && !enabled) {
 			oalSrc.stop();
 		}
-		
-		if(oalSrc.getVersion() != src.getVersion()) {
-			oalSrc.setPitch(src.getPitch());
-			oalSrc.setGain(src.getGain());
-			oalSrc.setMinGain(src.getMinGain());
-			oalSrc.setMaxGain(src.getMaxGain());
-			oalSrc.setLooping(src.isLooping());
-			oalSrc.setBuffer(OALBuffers.get().get(src.getSound()));
-			
-			switch(src.getStatus()) {
-				case PAUSED:
-					if(oalSrc.getSourceState() != AL_STOPPED) {
-						oalSrc.stop();
-						src.setStartTime(oalSrc.getCurrentTime());
-					}
-					break;
-				case PLAYING:
-					if(oalSrc.getSourceState() != AL_PLAYING) {
-						oalSrc.setCurrentTime(src.getStartTime());
-						oalSrc.play();
-					}
-					break;
-				case STOPPED:
-					if(oalSrc.getSourceState() != AL_STOPPED) {
-						oalSrc.stop();
-					}
-					
-					src.setStartTime(0);
-					break;
-			}
-			
-			oalSrc.setVersion(src.getVersion());
-		}
-		
-		oalSrc.step();
 		
 		return oalSrc;
 	}

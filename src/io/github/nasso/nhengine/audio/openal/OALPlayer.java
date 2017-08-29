@@ -1,26 +1,16 @@
 package io.github.nasso.nhengine.audio.openal;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.lwjgl.openal.AL10;
 
 import io.github.nasso.nhengine.audio.AudioPlayer;
 import io.github.nasso.nhengine.audio.Sound;
 import io.github.nasso.nhengine.component.AudioSourceComponent;
-import io.github.nasso.nhengine.level.Component;
-import io.github.nasso.nhengine.level.Level;
-import io.github.nasso.nhengine.level.Node;
-import io.github.nasso.nhengine.level.Scene;
-
 public class OALPlayer implements AudioPlayer {
 	public static final int QUICK_SOURCES_COUNT = 8;
 	
 	private OALSource[] quickSources = new OALSource[QUICK_SOURCES_COUNT];
 	private int[] quickSourcesLastUse = new int[QUICK_SOURCES_COUNT];
 	private int useCounter = 0;
-	
-	private List<AudioSourceComponent> componentsPool = new ArrayList<AudioSourceComponent>();
 	
 	public OALPlayer() {
 		for(int i = 0; i < QUICK_SOURCES_COUNT; i++) {
@@ -37,45 +27,6 @@ public class OALPlayer implements AudioPlayer {
 		for(int i = 0; i < QUICK_SOURCES_COUNT; i++) {
 			this.quickSources[i].dispose();
 		}
-	}
-	
-	private void projectNode(Node n) {
-		if(!n.isEnabled()) return;
-		
-		List<Component> comps = n.getComponents();
-		for(int i = 0; i < comps.size(); i++) {
-			Component c = comps.get(i);
-			
-			if(c instanceof AudioSourceComponent) {
-				this.componentsPool.add((AudioSourceComponent) c);
-			}
-		}
-		
-		List<Node> children = n.getChildren();
-		for(int i = 0; i < children.size(); i++)
-			this.projectNode(children.get(i));
-	}
-	
-	public void audioStep(Level lvl) {
-		List<Scene> sceneList = lvl.getOverlayScenes();
-		if(sceneList.isEmpty()) return;
-		
-		for(int s = 0; s < sceneList.size(); s++) {
-			Scene sce = sceneList.get(s);
-			
-			if(!sce.getRoot().isEnabled()) continue;
-			
-			this.projectNode(sce.getRoot());
-			
-			for(int i = 0; i < this.componentsPool.size(); i++) {
-				AudioSourceComponent comp = this.componentsPool.get(i);
-				OALSources.get().update(comp);
-			}
-			
-			this.componentsPool.clear();
-		}
-		
-		OALManager.fastCheckError("audio step");
 	}
 	
 	private OALSource findQuickAvailableSource() {
@@ -120,5 +71,33 @@ public class OALPlayer implements AudioPlayer {
 	
 	public void playSound(Sound snd) {
 		this.playSound(snd, 1);
+	}
+
+	public void sourceBuffer(AudioSourceComponent src, Sound snd) {
+		OALSource oalSource = OALSources.get().get(src);
+		
+		oalSource.setBuffer(OALBuffers.get().get(snd));
+	}
+
+	public void sourcePlay(AudioSourceComponent src, float time, float pitch, float gain, boolean loop) {
+		OALSource oalSource = OALSources.get().get(src);
+		
+		oalSource.setCurrentTime(time);
+		oalSource.setPitch(pitch);
+		oalSource.setGain(gain);
+		oalSource.setLooping(loop);
+		oalSource.play();
+	}
+
+	public void sourcePause(AudioSourceComponent src) {
+		OALSource oalSource = OALSources.get().get(src);
+		
+		oalSource.pause();
+	}
+
+	public void sourceStop(AudioSourceComponent src) {
+		OALSource oalSource = OALSources.get().get(src);
+		
+		oalSource.stop();
 	}
 }
