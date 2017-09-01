@@ -45,7 +45,7 @@ void main() {
 #endif
 	
 	// Canvas Scaling
-	quadPos3 -= vec3(scaleXY / 2f, 1.0);
+	quadPos3 -= vec3(scaleXY / 2.0, 1.0);
 	quadPos3 *= vec3(2.0 / scaleXY.x, -2.0 / scaleXY.y, 1.0);
 	
 	gl_Position = vec4(quadPos3, 1.0);

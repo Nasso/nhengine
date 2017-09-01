@@ -29,5 +29,5 @@ void main() {
 	if(clip.enabled && !clipMask(pass_quad_clip_pos)) discard;
 #endif
 	
-	out_color = texture(color, pass_quad_uv) * vec4(1, 1, 1, globalAlpha);
+	out_color = texture(color, pass_quad_uv) * vec4(1.0, 1.0, 1.0, globalAlpha);
 }

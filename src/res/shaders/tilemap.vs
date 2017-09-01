@@ -16,7 +16,7 @@ out vec4 pass_diffuseColorAlpha;
 out vec2 pass_uv;
 
 void main() {
-	pass_diffuseColorAlpha = vec4(1, 1, 1, opacity);
+	pass_diffuseColorAlpha = vec4(1.0, 1.0, 1.0, opacity);
 	
 	pass_uv = (1.0 / tilesetSize.xy) * (position + tileSetLocationMapPosition.xy);
 	

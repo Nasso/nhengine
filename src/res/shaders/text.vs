@@ -38,7 +38,7 @@ void main() {
 		if(clip.enabled) pass_clipPos = (clip.xform * vec3(transformedPos3.xy, 1.0)).xy;
 		
 		// Canvas Scaling
-		transformedPos3 -= vec3(scaleXY / 2f, 1.0);
+		transformedPos3 -= vec3(scaleXY / 2.0, 1.0);
 		transformedPos3 *= vec3(2.0 / scaleXY.x, -2.0 / scaleXY.y, 1.0);
 		
 		gl_Position = vec4(transformedPos3, 1.0);
