@@ -54,7 +54,7 @@ public abstract class Component extends Observable implements Disposable {
 	 * Called each frame, if the component is enabled and is in a scene in the currently loaded level.
 	 * If you want to implement some behaviors, that's the method you'll want to override.
 	 * 
-	 * @param delta Delta time, in seconds.
+	 * @param delta Delta time, in milliseconds.
 	 */
 	public void update(float delta) {
 		

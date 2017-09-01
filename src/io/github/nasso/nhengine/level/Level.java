@@ -20,7 +20,7 @@ public class Level extends Observable implements Disposable {
 		this.update(delta);
 		
 		for(int i = 0; i < this.scenes.size(); i++) {
-			this.scenes.get(i).step(i);
+			this.scenes.get(i).step(delta);
 		}
 	}
 	
