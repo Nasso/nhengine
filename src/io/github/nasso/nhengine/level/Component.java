@@ -42,6 +42,24 @@ public abstract class Component extends Observable implements Disposable {
 	private Matrix4f localMatrix = new Matrix4f(), worldMatrix = new Matrix4f();
 	private boolean localMatrixDirty = false, worldMatrixDirty = false;
 	
+	/**
+	 * Called each frame. This methods calls <code>{@link Component#update(delta) update(delta)}</code>.
+	 * @param delta
+	 */
+	public final void step(float delta) {
+		this.update(delta);
+	}
+	
+	/**
+	 * Called each frame, if the component is enabled and is in a scene in the currently loaded level.
+	 * If you want to implement some behaviors, that's the method you'll want to override.
+	 * 
+	 * @param delta Delta time, in seconds.
+	 */
+	public void update(float delta) {
+		
+	}
+	
 	void setOwner(Node n) {
 		this.owner = n;
 		

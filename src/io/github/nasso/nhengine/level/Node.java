@@ -94,6 +94,22 @@ public class Node extends Observable implements Disposable {
 		this.triggerEvent("dispose");
 	}
 	
+	public final void step(float delta) {
+		this.update(delta);
+		
+		for(int i = 0; i < this.components.size(); i++) {
+			this.components.get(i).step(delta);
+		}
+		
+		for(int i = 0; i < this.children.size(); i++) {
+			this.children.get(i).step(delta);
+		}
+	}
+	
+	public void update(float delta) {
+		
+	}
+	
 	public List<Component> getComponents() {
 		return this.components;
 	}

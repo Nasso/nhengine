@@ -19,6 +19,12 @@ public class Scene extends Observable implements Disposable {
 		this.name = name;
 	}
 	
+	public final void step(float delta) {
+		this.update(delta);
+		
+		this.root.step(delta);
+	}
+	
 	public void update(float delta) {
 		
 	}

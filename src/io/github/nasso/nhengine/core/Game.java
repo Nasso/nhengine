@@ -139,7 +139,7 @@ public class Game {
 				if(this.currentLevel != null) {
 					this.renderer.updateSize(this.window.getFrameWidth(), this.window.getFrameHeight());
 					
-					this.currentLevel.update(delta);
+					this.currentLevel.step(delta);
 					
 					List<Scene> sceneList = this.currentLevel.getOverlayScenes();
 					for(int i = 0; i < sceneList.size(); i++) {

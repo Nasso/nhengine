@@ -16,6 +16,14 @@ public class Level extends Observable implements Disposable {
 		this.triggerEvent("dispose");
 	}
 	
+	public final void step(float delta) {
+		this.update(delta);
+		
+		for(int i = 0; i < this.scenes.size(); i++) {
+			this.scenes.get(i).step(i);
+		}
+	}
+	
 	/**
 	 * Called every frame
 	 * 
