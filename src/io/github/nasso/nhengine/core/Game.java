@@ -135,12 +135,13 @@ public class Game {
 				this.window.pollEvents();
 				
 				TimeManager.step(delta);
-				if(!this.updateLevelBefore) this.runner.update(delta);
+				if(!this.updateLevelBefore && this.currentLevel != null) this.runner.update(delta);
 				
 				if(this.currentLevel != null) {
 					this.renderer.updateSize(this.window.getFrameWidth(), this.window.getFrameHeight());
 					
 					this.currentLevel.step(delta);
+					if(this.updateLevelBefore) this.runner.update(delta);
 					
 					List<Scene> sceneList = this.currentLevel.getOverlayScenes();
 					for(int i = 0; i < sceneList.size(); i++) {
@@ -151,8 +152,6 @@ public class Game {
 					this.inputManager.processInput(this.currentLevel);
 					if(!this.window.isMinified()) this.renderer.render(this.currentLevel);
 				}
-				
-				if(this.updateLevelBefore) this.runner.update(delta);
 				
 				this.window.swapBuffers();
 				
