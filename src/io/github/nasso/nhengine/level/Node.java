@@ -25,6 +25,8 @@ public class Node extends Observable implements Disposable {
 	private Node parent;
 	Scene rootOf = null;
 	
+	private boolean updateChildrenBefore = false;
+	private boolean updateComponentsBefore = false;
 	private boolean enabled = true;
 	
 	/**
@@ -95,14 +97,21 @@ public class Node extends Observable implements Disposable {
 	}
 	
 	public final void step(float delta) {
-		this.update(delta);
-		
-		for(int i = 0; i < this.components.size(); i++) {
-			this.components.get(i).step(delta);
+		if(this.updateChildrenBefore) {
+			for(int i = 0; i < this.children.size(); i++)
+				this.children.get(i).step(delta);
 		}
 		
-		for(int i = 0; i < this.children.size(); i++) {
-			this.children.get(i).step(delta);
+		if(!this.updateComponentsBefore) this.update(delta);
+		
+		for(int i = 0; i < this.components.size(); i++)
+			this.components.get(i).step(delta);
+
+		if(this.updateComponentsBefore) this.update(delta);
+
+		if(!this.updateChildrenBefore) {
+			for(int i = 0; i < this.children.size(); i++)
+				this.children.get(i).step(delta);
 		}
 	}
 	
@@ -398,5 +407,21 @@ public class Node extends Observable implements Disposable {
 	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public boolean isUpdateChildrenBefore() {
+		return this.updateChildrenBefore;
+	}
+	
+	public void setUpdateChildrenBefore(boolean updateChildrenBefore) {
+		this.updateChildrenBefore = updateChildrenBefore;
+	}
+
+	public boolean isUpdateComponentsBefore() {
+		return this.updateComponentsBefore;
+	}
+
+	public void setUpdateComponentsBefore(boolean updateComponentsBefore) {
+		this.updateComponentsBefore = updateComponentsBefore;
 	}
 }

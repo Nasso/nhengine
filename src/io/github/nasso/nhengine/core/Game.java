@@ -34,6 +34,7 @@ public class Game {
 	private float fps = 0;
 	private int maxFPS = 0;
 	
+	private boolean updateLevelBefore = false;
 	private boolean useSteam = false;
 	private boolean shouldQuit = false;
 	
@@ -134,7 +135,7 @@ public class Game {
 				this.window.pollEvents();
 				
 				TimeManager.step(delta);
-				this.runner.update(delta);
+				if(!this.updateLevelBefore) this.runner.update(delta);
 				
 				if(this.currentLevel != null) {
 					this.renderer.updateSize(this.window.getFrameWidth(), this.window.getFrameHeight());
@@ -150,6 +151,8 @@ public class Game {
 					this.inputManager.processInput(this.currentLevel);
 					if(!this.window.isMinified()) this.renderer.render(this.currentLevel);
 				}
+				
+				if(this.updateLevelBefore) this.runner.update(delta);
 				
 				this.window.swapBuffers();
 				
@@ -193,5 +196,13 @@ public class Game {
 	
 	public void setMaxFPS(int maxFPS) {
 		this.maxFPS = maxFPS;
+	}
+
+	public boolean isUpdateLevelBefore() {
+		return this.updateLevelBefore;
+	}
+
+	public void setUpdateLevelBefore(boolean updateLevelBefore) {
+		this.updateLevelBefore = updateLevelBefore;
 	}
 }

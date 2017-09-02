@@ -8,6 +8,7 @@ import io.github.nasso.nhengine.event.Observable;
 
 public class Level extends Observable implements Disposable {
 	private List<Scene> scenes = new ArrayList<Scene>();
+	private boolean updateScenesBefore = false;
 	
 	public Level() {
 	}
@@ -17,11 +18,12 @@ public class Level extends Observable implements Disposable {
 	}
 	
 	public final void step(float delta) {
-		this.update(delta);
+		if(!this.updateScenesBefore) this.update(delta);
 		
-		for(int i = 0; i < this.scenes.size(); i++) {
+		for(int i = 0; i < this.scenes.size(); i++)
 			this.scenes.get(i).step(delta);
-		}
+		
+		if(this.updateScenesBefore) this.update(delta);
 	}
 	
 	/**
@@ -34,6 +36,14 @@ public class Level extends Observable implements Disposable {
 		
 	}
 	
+	public boolean isUpdateScenesBefore() {
+		return this.updateScenesBefore;
+	}
+
+	public void setUpdateScenesBefore(boolean updateScenesBefore) {
+		this.updateScenesBefore = updateScenesBefore;
+	}
+
 	public void addOverlayScene(Scene sce) {
 		this.scenes.add(sce);
 	}
