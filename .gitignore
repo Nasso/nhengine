@@ -3,8 +3,6 @@
 /bin/
 .settings/
 /export/
-.project
-.classpath
 
 # Documentation, since it's not complete yet
 /doc/
@@ -13,7 +11,6 @@
 *.log
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.zip

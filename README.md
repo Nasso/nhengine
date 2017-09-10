@@ -13,4 +13,8 @@ It's still a Work In Progress, some features are here, but they might change at 
 ![General](/res/screenshot-sans.png "General")
 
 ## Dependencies
-- LWJGL3: You can download it from their website (https://www.lwjgl.org/download), using `lwjgl-release-custom-zip.json` as the config file.
+Nhengine has some dependencies. They are all in the `lib/` folder. The given `.project` eclipse project has its classpath setup to use them.
+However, you can still download them separately if you want, but it may, or may not work with different versions.
+
+- LWJGL3: You can download it from [their website](https://www.lwjgl.org/download), using `lwjgl-release-custom-zip.json` as the config file.
+- GSON: Get it on [the official GitHub repository](https://github.com/google/gson).
