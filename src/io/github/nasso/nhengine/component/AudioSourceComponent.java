@@ -11,7 +11,7 @@ import io.github.nasso.nhengine.level.Component;
  */
 public class AudioSourceComponent extends Component {
 	private boolean looping = false;
-	private float startTime = 0, pitch = 1, gain = 1;
+	private float pitch = 1, gain = 1;
 	
 	private Sound sound = null;
 	
@@ -171,13 +171,5 @@ public class AudioSourceComponent extends Component {
 		if(this.looping == looping) return;
 		
 		this.looping = looping;
-	}
-
-	public float getStartTime() {
-		return this.startTime;
-	}
-
-	public void setStartTime(float startTime) {
-		this.startTime = startTime;
 	}
 }

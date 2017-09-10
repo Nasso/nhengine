@@ -90,17 +90,17 @@ public class OGLTileMapRenderer extends OGLComponentRenderer<TileMapComponent> {
 				cellStartX = Math.max(cellStartX, 0);
 				cellStartY = Math.max(cellStartY, 0);
 				
-				cellEndX = Math.min(cellEndX, comp.getMapSizeX());
-				cellEndY = Math.min(cellEndY, comp.getMapSizeY());
+				cellEndX = Math.min(cellEndX, comp.getMapWidth());
+				cellEndY = Math.min(cellEndY, comp.getMapHeight());
 				
-				int[] tiles = layer.getTiles();
+				int[] tiles = layer.getData();
 				
 				// Render the stuff MAX_INSTANCES by MAX_INSTANCES
 				int bInstanceID = 0;
 				
 				for(int cellX = cellStartX; cellX < cellEndX; cellX++) {
 					for(int cellY = cellStartY; cellY < cellEndY; cellY++) {
-						int tileID = tiles[cellY * comp.getMapSizeX() + cellX];
+						int tileID = tiles[cellY * comp.getMapWidth() + cellX];
 						if(tileID == -1 || !tileset.containsGlobalID(tileID)) continue;
 						
 						int locx = tileset.getTileColumn(tileID);

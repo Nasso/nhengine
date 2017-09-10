@@ -95,8 +95,8 @@ public class TiledFormatLoader {
 				
 				for(int j = 0; j < dataArray.length; j++) {
 					int id = dataArray[j];
-					int x = j % tMap.getMapSizeX();
-					int y = j / tMap.getMapSizeX();
+					int x = j % tMap.getMapWidth();
+					int y = j / tMap.getMapWidth();
 					
 					for(int s = 0; s < tileMapDef.tilesets.length; s++) {
 						TileSetDef tileSetDef = tileMapDef.tilesets[s];

@@ -37,7 +37,7 @@ public class TiledWorldScene extends Scene {
 		this.terrainBase.setDepth(0);
 		
 		this.terrainNode = new Node();
-		this.terrainNode.setPosition(-this.terrainBase.getMapSizeX() * this.terrainBase.getCellWidth() * 0.5f, -this.terrainBase.getMapSizeY() * this.terrainBase.getCellHeight() * 0.5f);
+		this.terrainNode.setPosition(-this.terrainBase.getMapWidth() * this.terrainBase.getCellWidth() * 0.5f, -this.terrainBase.getMapHeight() * this.terrainBase.getCellHeight() * 0.5f);
 		this.terrainNode.addComponents(this.terrainBase);
 		
 		root.addChild(this.terrainNode);

@@ -123,6 +123,10 @@ public class TileMapComponent extends DrawableComponent {
 		}
 	}
 	
+	/**
+	 * A layer contains an array of global IDs to tiles. A map can be composed of multiple layers but they're all the same size.
+	 * @author nasso
+	 */
 	public static class Layer {
 		private boolean visible;
 		
@@ -150,54 +154,96 @@ public class TileMapComponent extends DrawableComponent {
 			this.verticalOffset = 0.0f;
 		}
 		
+		/**
+		 * @return This layer's opacity.
+		 */
 		public float getOpacity() {
 			return this.opacity;
 		}
 		
+		/**
+		 * @param opacity The new layer opacity.
+		 */
 		public void setOpacity(float opacity) {
 			this.opacity = opacity;
 		}
 		
+		/**
+		 * @return This layer's horizontal offset.
+		 */
 		public float getHorizontalOffset() {
 			return this.horizontalOffset;
 		}
 		
+		/**
+		 * @param horizontalOffset The new horizontal offset of this layer.
+		 */
 		public void setHorizontalOffset(float horizontalOffset) {
 			this.horizontalOffset = horizontalOffset;
 		}
+
 		
+		/**
+		 * @return This layer's vertical offset.
+		 */
 		public float getVerticalOffset() {
 			return this.verticalOffset;
 		}
+
 		
+		/**
+		 * @param horizontalOffset The new vertical offset of this layer.
+		 */
 		public void setVerticalOffset(float verticalOffset) {
 			this.verticalOffset = verticalOffset;
 		}
-		
+
+		/**
+		 * The data array is a 1 dimensional array containing tiles global IDs arranged by rows.<br>
+		 * The array returned is a direct reference to the data of this layer: all modification to this array will be visible on the map immediately.
+		 * 
+		 * @return This layer's data.
+		 */
 		public int[] getData() {
 			return this.data;
 		}
 		
+		/**
+		 * Sets the tile ID at the given position in this layer. If the given coordinates are out of range, nothing happens.
+		 * 
+		 * @param x The column
+		 * @param y The row
+		 * @param tileID The global tile ID
+		 */
 		public void setTileAt(int x, int y, int tileID) {
 			if(x < 0 || x >= this.width || y < 0 || y >= this.height) return;
 			
 			this.data[y * this.width + x] = tileID;
 		}
 		
+		/**
+		 * Returns the global tile ID at the given position or -1 if the given coordinates are out of range.
+		 * 
+		 * @param x The column
+		 * @param y The row
+		 * @return The global tile ID at the given position or -1.
+		 */
 		public int getTileAt(int x, int y) {
 			if(x < 0 || x >= this.width || y < 0 || y >= this.height) return -1;
 			
 			return this.data[y * this.width + x];
 		}
 		
-		public int[] getTiles() {
-			return this.data;
-		}
-		
+		/**
+		 * @return The visibility of this layer.
+		 */
 		public boolean isVisible() {
 			return this.visible;
 		}
 		
+		/**
+		 * @param visible True to set visible, false for invisible.
+		 */
 		public void setVisible(boolean visible) {
 			this.visible = visible;
 		}
@@ -213,6 +259,14 @@ public class TileMapComponent extends DrawableComponent {
 	
 	private Box2D boundingBox = new Box2D();
 	
+	/**
+	 * Constructs a tile map component with the given parameters.
+	 * 
+	 * @param width The row count.
+	 * @param height The column count.
+	 * @param tileWidth The width of each tile.
+	 * @param tileHeight The height of each tile.
+	 */
 	public TileMapComponent(int width, int height, float tileWidth, float tileHeight) {
 		this.width = width;
 		this.height = height;
@@ -223,6 +277,14 @@ public class TileMapComponent extends DrawableComponent {
 		this.computeBoundingBox();
 	}
 	
+	/**
+	 * Adds a new tile set to this tile map.
+	 * 
+	 * @param tex The tile-set texture.
+	 * @param cols The number of columns in the tile-set.
+	 * @param rows The number of rows in the tile-set.
+	 * @return The created tile-set object.
+	 */
 	public TileSet createTileSet(Texture2D tex, int cols, int rows) {
 		int firstgid = 0;
 		
@@ -237,33 +299,58 @@ public class TileMapComponent extends DrawableComponent {
 		return set;
 	}
 	
+	/**
+	 * @param id The tile-set id.
+	 * @return The tile-set of this tile-map corresponding to the given tile-set ID.
+	 */
 	public TileSet getTileSet(int id) {
 		if(id < 0 || id >= this.getTileSetCount()) return null;
 		
 		return this.tilesets.get(id);
 	}
 	
+	/**
+	 * @return The total tile-set count.
+	 */
 	public int getTileSetCount() {
 		return this.tilesets.size();
 	}
 	
+	/**
+	 * Adds a new layer to this map. The layer size will be the same as the map.
+	 * @return The created layer.
+	 */
 	public Layer createLayer() {
 		Layer layer = new Layer(this.width, this.height);
 		this.layers.add(layer);
 		
 		return layer;
 	}
-	
+
+	/**
+	 * @param id The layer id.
+	 * @return The layer of this tile-map corresponding to the given layer ID.
+	 */
 	public Layer getLayer(int id) {
 		if(id < 0 || id >= this.getLayerCount()) return null;
 		
 		return this.layers.get(id);
 	}
 	
+	/**
+	 * @return The number of layers in this map.
+	 */
 	public int getLayerCount() {
 		return this.layers.size();
 	}
 	
+	/**
+	 * Returns the tile-set containing the tile corresponding to the given tile global ID.<br>
+	 * It returns null if the ID is out of range.
+	 * 
+	 * @param tileID The global tile ID.
+	 * @return The tile-set.
+	 */
 	public TileSet getTileSetForGlobalTileID(int tileID) {
 		if(tileID < 0) return null;
 		
@@ -275,18 +362,30 @@ public class TileMapComponent extends DrawableComponent {
 		return null;
 	}
 	
-	public int getMapSizeX() {
+	/**
+	 * @return This map's column count.
+	 */
+	public int getMapWidth() {
 		return this.width;
 	}
-	
-	public int getMapSizeY() {
+
+	/**
+	 * @return This map's row count.
+	 */
+	public int getMapHeight() {
 		return this.height;
 	}
 	
+	/**
+	 * @return The width of each cell in this map.
+	 */
 	public float getCellWidth() {
 		return this.tileWidth;
 	}
 	
+	/**
+	 * @return The height of each cell in this map.
+	 */
 	public float getCellHeight() {
 		return this.tileHeight;
 	}
@@ -299,10 +398,20 @@ public class TileMapComponent extends DrawableComponent {
 		return this.boundingBox;
 	}
 	
+	/**
+	 * <em>Note: This feature is experimental and may be broken.</em>
+	 * 
+	 * @return True if this map is in isometric mode, false otherwise.
+	 */
 	public boolean isIsometric() {
 		return this.isometric;
 	}
 	
+	/**
+	 * <em>Note: This feature is experimental and may be broken.</em>
+	 * 
+	 * @param isometric True to set this map to isometric mod.
+	 */
 	public void setIsometric(boolean isometric) {
 		if(this.isometric == isometric) return;
 		
