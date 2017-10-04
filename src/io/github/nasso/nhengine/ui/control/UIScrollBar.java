@@ -67,7 +67,7 @@ public class UIScrollBar extends UIContainer {
 		}
 		
 		public Color getBackground() {
-			return this.background == null && this.getTheme() != null ? this.getTheme().getScrollBarArrowButtonBackground() : super.getBackground();
+			return this.getTheme().getColor("scrollBar.arrowButton.background", super.background);
 		}
 		
 		public void setForeground(Color c) {
@@ -75,7 +75,7 @@ public class UIScrollBar extends UIContainer {
 		}
 		
 		public Color getForeground() {
-			return this.foreground == null && this.getTheme() != null ? this.getTheme().getTextColor() : this.foreground;
+			return this.getTheme().getColor("scrollBar.arrowButton.foreground", this.foreground);
 		}
 		
 		public void computePreferredSize() {
@@ -160,7 +160,7 @@ public class UIScrollBar extends UIContainer {
 		}
 		
 		public Color getColor() {
-			return this.color == null && this.getTheme() != null ? this.getTheme().getScrollBarThumbColor() : this.color;
+			return this.getTheme().getColor("scrollBar.thumb.background", this.color);
 		}
 		
 		public void setColor(Color color) {
@@ -168,7 +168,7 @@ public class UIScrollBar extends UIContainer {
 		}
 		
 		public Color getBorderColor() {
-			return this.borderColor == null && this.getTheme() != null ? this.getTheme().getScrollBarThumbBorderColor() : this.borderColor;
+			return this.getTheme().getColor("scrollBar.thumb.borderColor", this.borderColor);
 		}
 		
 		public void setBorderColor(Color borderColor) {
@@ -176,7 +176,7 @@ public class UIScrollBar extends UIContainer {
 		}
 		
 		public float getBorderSize() {
-			return Float.isNaN(this.borderSize) && this.getTheme() != null ? this.getTheme().getScrollBarThumbBorderSize() : this.borderSize;
+			return this.getTheme().getFloat("scrollBar.thumb.borderSize", this.borderSize);
 		}
 		
 		public void setBorderSize(float borderSize) {
@@ -184,7 +184,7 @@ public class UIScrollBar extends UIContainer {
 		}
 		
 		public float getBorderRadius() {
-			return Float.isNaN(this.borderRadius) && this.getTheme() != null ? this.getTheme().getScrollBarThumbBorderRadius() : this.borderRadius;
+			return this.getTheme().getFloat("scrollBar.thumb.borderRadius", this.borderRadius);
 		}
 		
 		public void setBorderRadius(float borderRadius) {
@@ -201,7 +201,7 @@ public class UIScrollBar extends UIContainer {
 		}
 		
 		public Color getBackground() {
-			return this.background == null && this.getTheme() != null ? this.getTheme().getScrollBarBackground() : super.getBackground();
+			return this.getTheme().getColor("scrollBar.background", super.background);
 		}
 		
 		public Thumb getThumb() {
@@ -267,7 +267,7 @@ public class UIScrollBar extends UIContainer {
 	}
 	
 	public float getBarSize() {
-		return Float.isNaN(this.barSize) && this.getTheme() != null ? this.getTheme().getScrollBarSize() : this.barSize;
+		return this.getTheme().getFloat("scrollBar.size", this.barSize);
 	}
 	
 	public boolean isVertical() {

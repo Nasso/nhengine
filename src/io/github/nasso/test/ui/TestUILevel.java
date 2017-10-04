@@ -33,6 +33,7 @@ import io.github.nasso.nhengine.ui.control.UIProgressBar;
 import io.github.nasso.nhengine.ui.control.UIScrollPane;
 import io.github.nasso.nhengine.ui.control.UISeparator;
 import io.github.nasso.nhengine.ui.control.UISlider;
+import io.github.nasso.nhengine.ui.control.UISplitPane;
 import io.github.nasso.nhengine.ui.control.UITabbedPane;
 import io.github.nasso.nhengine.ui.control.UITextField;
 import io.github.nasso.nhengine.ui.control.UIToggleButton;
@@ -389,12 +390,20 @@ public class TestUILevel extends Level {
 		dialogsPane.setPadding(8);
 		dialogsPane.add(messageBoxPane);
 		
+		// - SPLIT -
+		UISplitPane splitPane = new UISplitPane();
+		UIButton splitA = new UIButton("A"), splitB = new UIButton("B");
+		splitPane.setPadding(4);
+		splitPane.setA(splitA);
+		splitPane.setB(splitB);
+		
 		// - GLOBAL -
 		UITabbedPane demoPane = new UITabbedPane();
 		demoPane.setPadding(8);
 		demoPane.insertTab("Buttons", new UIScrollPane(buttonsPane));
 		demoPane.insertTab("Basics", basicsPane);
 		demoPane.insertTab("Dialogs", dialogsPane);
+		demoPane.insertTab("Split", splitPane);
 		
 		return demoPane;
 	}

@@ -42,7 +42,7 @@ public class UISeparator extends UIComponent {
 	}
 	
 	public Color getColor() {
-		return this.color == null && this.getTheme() != null ? this.getTheme().getSeparatorColor() : this.color;
+		return this.getTheme().getColor("separator.color", this.color);
 	}
 	
 	public void setColor(Color color) {

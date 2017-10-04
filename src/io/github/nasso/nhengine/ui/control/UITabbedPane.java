@@ -251,7 +251,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public Color getBackground() {
-		return this.background == null && this.getTheme() != null ? this.getTheme().getTabbedPaneBackgroundColor() : this.background;
+		return this.getTheme().getColor("tabPane.background", this.background);
 	}
 	
 	private void fireTabChange() {
@@ -328,7 +328,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public Color getTabBackground() {
-		return this.tabBackground == null && this.getTheme() != null ? this.getTheme().getTabBackgroundColor() : this.tabBackground;
+		return this.getTheme().getColor("tabPane.tab.background", this.tabBackground);
 	}
 	
 	public void setTabBackground(Color tabBackground) {
@@ -336,7 +336,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public float getTabAngleWidth() {
-		return Float.isNaN(this.tabAngleWidth) && this.getTheme() != null ? this.getTheme().getTabAngleWidth() : this.tabAngleWidth;
+		return this.getTheme().getFloat("tabPane.tab.angleWidth", this.tabAngleWidth);
 	}
 	
 	public void setTabAngleWidth(float tabAngleWidth) {
@@ -344,7 +344,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public Color getActiveTabBackground() {
-		return this.activeTabBackground == null && this.getTheme() != null ? this.getTheme().getActiveTabBackgroundColor() : this.activeTabBackground;
+		return this.getTheme().getColor("tabPane.activeTab.background", this.activeTabBackground);
 	}
 	
 	public void setActiveTabBackground(Color activeTabBackground) {
@@ -352,7 +352,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public float getTabCloseButtonSize() {
-		return Float.isNaN(this.tabCloseBtnSize) && this.getTheme() != null ? this.getTheme().getTabCloseButtonSize() : this.tabCloseBtnSize;
+		return this.getTheme().getFloat("tabPane.tab.closeButton.size", this.tabCloseBtnSize);
 	}
 	
 	public void setTabCloseButtonSize(float tabCloseBtnSize) {
@@ -360,7 +360,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public float getTabCloseButtonBorderRadius() {
-		return Float.isNaN(this.tabCloseBtnBorderRadius) && this.getTheme() != null ? this.getTheme().getTabCloseButtonBorderRadius() : this.tabCloseBtnBorderRadius;
+		return this.getTheme().getFloat("tabPane.tab.closeButton.borderRadius", this.tabCloseBtnBorderRadius);
 	}
 	
 	public void setTabCloseButtonBorderRadius(float tabCloseBtnBorderRadius) {
@@ -368,7 +368,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public Color getTabCloseButtonBackground() {
-		return this.tabCloseButtonBackground == null && this.getTheme() != null ? this.getTheme().getTabCloseButtonBackground() : this.tabCloseButtonBackground;
+		return this.getTheme().getColor("tabPane.tab.closeButton.background", this.tabCloseButtonBackground);
 	}
 	
 	public void setTabCloseButtonBackground(Color tabCloseButtonBackground) {
@@ -376,7 +376,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public Color getTabCloseButtonForeground() {
-		return this.tabCloseButtonForeground == null && this.getTheme() != null ? this.getTheme().getTabCloseButtonForeground() : this.tabCloseButtonForeground;
+		return this.getTheme().getColor("tabPane.tab.closeButton.foreground", this.tabCloseButtonForeground);
 	}
 	
 	public void setTabCloseButtonForeground(Color tabCloseButtonForeground) {
@@ -384,7 +384,7 @@ public class UITabbedPane extends UIContainer {
 	}
 	
 	public Color getTabCloseButtonHoverBackground() {
-		return this.tabCloseButtonHoverBackground == null && this.getTheme() != null ? this.getTheme().getTabCloseButtonHoverBackground() : this.tabCloseButtonHoverBackground;
+		return this.getTheme().getColor("tabPane.tab.closeButton.hoverBackground", this.tabCloseButtonHoverBackground);
 	}
 	
 	public void setTabCloseButtonHoverBackground(Color tabCloseButtonHoverBackground) {

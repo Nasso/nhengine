@@ -117,7 +117,7 @@ public class UIPopupMenu extends UIContainer {
 	}
 	
 	public Color getBackground() {
-		return this.background == null && this.getTheme() != null ? this.getTheme().getPopupBackgroundColor() : this.background;
+		return this.getTheme().getColor("popup.background", this.background);
 	}
 	
 	public Vector2fc getSubPopupPositionOffset() {

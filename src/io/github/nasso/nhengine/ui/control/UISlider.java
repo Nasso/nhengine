@@ -74,7 +74,7 @@ public class UISlider extends UIComponent {
 	}
 	
 	public float getBorderRadius() {
-		return Float.isNaN(this.borderRadius) && this.getTheme() != null ? this.getTheme().getSliderBorderRadius() : this.borderRadius;
+		return this.getTheme().getFloat("slider.borderRadius", this.borderRadius);
 	}
 	
 	public void setBorderRadius(float rad) {
@@ -92,11 +92,11 @@ public class UISlider extends UIComponent {
 	}
 	
 	public Color getForeground() {
-		return this.foreground == null && this.getTheme() != null ? this.getTheme().getSliderForegroundColor() : this.foreground;
+		return this.getTheme().getColor("slider.foreground", this.foreground);
 	}
 	
 	public Color getBackground() {
-		return this.background == null && this.getTheme() != null ? this.getTheme().getSliderBackgroundColor() : this.background;
+		return this.getTheme().getColor("slider.background", this.background);
 	}
 	
 	public void setForeground(Color foreground) {
@@ -104,7 +104,7 @@ public class UISlider extends UIComponent {
 	}
 	
 	public float getDotRadius() {
-		return Float.isNaN(this.dotRadius) && this.getTheme() != null ? this.getTheme().getSliderDotBorderRadius() : this.dotRadius;
+		return this.getTheme().getFloat("slider.dot.borderRadius", this.dotRadius);
 	}
 	
 	public void setDotRadius(float dotRadius) {
@@ -112,7 +112,7 @@ public class UISlider extends UIComponent {
 	}
 	
 	public float getDotWidth() {
-		return Float.isNaN(this.dotWidth) && this.getTheme() != null ? this.getTheme().getSliderDotWidth() : this.dotWidth;
+		return this.getTheme().getFloat("slider.dot.width", this.dotWidth);
 	}
 	
 	public void setDotWidth(float dotWidth) {
@@ -120,7 +120,7 @@ public class UISlider extends UIComponent {
 	}
 	
 	public float getDotHeight() {
-		return Float.isNaN(this.dotHeight) && this.getTheme() != null ? this.getTheme().getSliderDotHeight() : this.dotHeight;
+		return this.getTheme().getFloat("slider.dot.height", this.dotHeight);
 	}
 	
 	public void setDotHeight(float dotHeight) {
@@ -128,7 +128,7 @@ public class UISlider extends UIComponent {
 	}
 	
 	public float getBarHeight() {
-		return Float.isNaN(this.barHeight) && this.getTheme() != null ? this.getTheme().getSliderBarHeight() : this.barHeight;
+		return this.getTheme().getFloat("slider.barHeight", this.barHeight);
 	}
 	
 	public void setBarHeight(float barHeight) {

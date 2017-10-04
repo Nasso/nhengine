@@ -89,7 +89,7 @@ public class UIRootPane extends UIContainer {
 		protected void paintComponent(GraphicsContext2D gtx) {
 			if(!this.blinkTransition.isFinished()) {
 				gtx.setGlobalAlpha(this.blinkTransition.getValue());
-				gtx.setStroke(this.getTheme().getDialogModalFocusColor());
+				gtx.setStroke(this.getTheme().getColor("dialog.modalFocusColor", this.dial.getModalFocusColor()));
 				gtx.setStrokeSize(2);
 				gtx.strokeRect(this.dial.getX(), this.dial.getY(), this.dial.getWidth(), this.dial.getHeight());
 			}

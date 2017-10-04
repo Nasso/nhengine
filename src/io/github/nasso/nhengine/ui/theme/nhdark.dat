@@ -1,0 +1,69 @@
+pane.background = gray(0.28)
+
+separator.color = gray(0.4)
+
+text.color = gray(0.9)
+
+button.borderRadius = 4
+button.borderSize = 2
+button.color = gray(0.2)
+button.borderColor = gray(0.15)
+button.hoverColor = gray(0.25)
+button.pressedColor = gray(0.3)
+
+progressBar.borderRadius = 4
+progressBar.background = gray(0.2)
+progressBar.foreground = gray(0.3)
+
+toggleButton.roundness = 0.5
+toggleButton.color = gray(1)
+toggleButton.selectedColor = rgb(0, 0.5, 1)
+toggleButton.unselectedColor = gray(0.15)
+
+popup.background = gray(0.15)
+
+menuBar.background = gray(0.2)
+
+slider.barHeight = 4
+slider.borderRadius = 2
+slider.dot.borderRadius = 2
+slider.dot.width = 8
+slider.dot.height = 18
+slider.background = gray(0.2)
+slider.foreground = gray(0.9)
+
+textField.borderRadius = 2
+textField.borderSize = 2
+textField.selection = rgba(0, 0.5, 1, 0.5)
+textField.background = gray(0.2)
+textField.borderColor = gray(0.15)
+
+tabPane.background = gray(0.15)
+tabPane.tab.angleWidth = 8
+tabPane.tab.background = gray(0.2)
+tabPane.tab.closeButton.size = 12
+tabPane.tab.closeButton.borderRadius = 8
+tabPane.tab.closeButton.background = gray(0.4)
+tabPane.tab.closeButton.foreground = gray(1)
+tabPane.tab.closeButton.hoverBackground = rgb(1, 0.3, 0.3)
+tabPane.activeTab.background = gray(0.28)
+
+scrollBar.size = 16
+scrollBar.background = gray(0.25)
+scrollBar.arrowButton.background = gray(0.2)
+scrollBar.arrowButton.foreground = gray(0.9)
+scrollBar.thumb.borderSize = 0
+scrollBar.thumb.borderRadius = 0
+scrollBar.thumb.borderColor = gray(0.25)
+scrollBar.thumb.background = gray(0.2)
+
+dialog.modalFocusColor = rgb(0, 0.5, 1)
+dialog.titleBar.height = 32
+dialog.titleBar.background = gray(0.2)
+dialog.closeButton.borderRadius = 4
+dialog.closeButton.color = gray(0.15)
+dialog.closeButton.hoverColor = rgb(1, 0.3, 0.3)
+dialog.closeButton.pressedColor = rgb(0.7, 0.2, 0.2)
+
+splitter.width = 4
+splitter.background = gray(0.15)

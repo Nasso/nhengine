@@ -316,6 +316,6 @@ public class UIContainer extends UIComponent {
 	}
 	
 	public Color getBackground() {
-		return this.background == null && this.getTheme() != null ? this.getTheme().getPaneBackground() : this.background;
+		return this.getTheme().getColor("pane.background", this.background);
 	}
 }

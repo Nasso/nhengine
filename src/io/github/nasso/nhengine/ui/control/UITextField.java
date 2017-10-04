@@ -181,7 +181,7 @@ public class UITextField extends UITextComponent {
 	}
 	
 	public Color getBorderColor() {
-		return this.borderColor == null && this.getTheme() != null ? this.getTheme().getTextFieldBorderColor() : this.borderColor;
+		return this.getTheme().getColor("textField.borderColor", this.borderColor);
 	}
 	
 	public void setBorderColor(Color borderColor) {
@@ -189,11 +189,11 @@ public class UITextField extends UITextComponent {
 	}
 	
 	public Color getBackground() {
-		return this.background == null && this.getTheme() != null ? this.getTheme().getTextFieldBackgroundColor() : this.background;
+		return this.getTheme().getColor("textField.background", this.background);
 	}
 	
 	public float getBorderRadius() {
-		return Float.isNaN(this.borderRadius) && this.getTheme() != null ? this.getTheme().getTextFieldBorderRadius() : this.borderRadius;
+		return this.getTheme().getFloat("textField.borderRadius", this.borderRadius);
 	}
 	
 	public void setBorderRadius(float rad) {
@@ -202,7 +202,7 @@ public class UITextField extends UITextComponent {
 	}
 	
 	public float getBorderSize() {
-		return Float.isNaN(this.borderSize) && this.getTheme() != null ? this.getTheme().getTextFieldBorderSize() : this.borderSize;
+		return this.getTheme().getFloat("textField.borderSize", this.borderSize);
 	}
 	
 	public void setBorderSize(float borderSize) {
@@ -218,7 +218,7 @@ public class UITextField extends UITextComponent {
 	}
 	
 	public Color getSelectionColor() {
-		return this.selectionColor == null && this.getTheme() != null ? this.getTheme().getTextFieldSelectionColor() : this.selectionColor;
+		return this.getTheme().getColor("textField.selection", this.selectionColor);
 	}
 	
 	public void setSelectionColor(Color selectionColor) {

@@ -143,7 +143,7 @@ public class UIToggleButton extends UITextComponent {
 	}
 	
 	public Color getColor() {
-		return this.color == null && this.getTheme() != null ? this.getTheme().getToggleButtonColor() : this.color;
+		return this.getTheme().getColor("toggleButton.color", this.color);
 	}
 	
 	public void setColor(Color color) {
@@ -151,7 +151,7 @@ public class UIToggleButton extends UITextComponent {
 	}
 	
 	public Color getSelectedColor() {
-		return this.selectedColor == null && this.getTheme() != null ? this.getTheme().getToggleButtonSelectedColor() : this.selectedColor;
+		return this.getTheme().getColor("toggleButton.selectedColor", this.selectedColor);
 	}
 	
 	public void setSelectedColor(Color selectedColor) {
@@ -159,7 +159,7 @@ public class UIToggleButton extends UITextComponent {
 	}
 	
 	public Color getUnselectedColor() {
-		return this.unselectedColor == null && this.getTheme() != null ? this.getTheme().getToggleButtonUnselectedColor() : this.unselectedColor;
+		return this.getTheme().getColor("toggleButton.unselectedColor", this.unselectedColor);
 	}
 	
 	public void setUnselectedColor(Color unselectedColor) {
@@ -175,7 +175,7 @@ public class UIToggleButton extends UITextComponent {
 	}
 	
 	public float getRoundness() {
-		return Float.isNaN(this.roundness) && this.getTheme() != null ? this.getTheme().getToggleButtonRoundness() : this.roundness;
+		return this.getTheme().getFloat("toggleButton.roundness", this.roundness);
 	}
 	
 	public void setRoundness(float roundness) {

@@ -36,5 +36,4 @@ public class TestUIMain implements GameRunner {
 	public static void main(String[] argv) {
 		new TestUIMain();
 	}
-	
 }

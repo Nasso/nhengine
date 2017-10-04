@@ -162,7 +162,7 @@ public class UIButton extends UITextComponent {
 	}
 	
 	public float getBorderRadius() {
-		return Float.isNaN(this.borderRadius) && this.getTheme() != null ? this.getTheme().getButtonBorderRadius() : this.borderRadius;
+		return this.getTheme().getFloat("button.borderRadius", this.borderRadius);
 	}
 	
 	public void setBorderRadius(float borderRadius) {
@@ -170,7 +170,7 @@ public class UIButton extends UITextComponent {
 	}
 	
 	public float getBorderSize() {
-		return Float.isNaN(this.borderSize) && this.getTheme() != null ? this.getTheme().getButtonBorderSize() : this.borderSize;
+		return this.getTheme().getFloat("button.borderSize", this.borderSize);
 	}
 	
 	public void setBorderSize(float borderSize) {
@@ -178,7 +178,7 @@ public class UIButton extends UITextComponent {
 	}
 	
 	public Color getBorderColor() {
-		return this.borderColor == null && this.getTheme() != null ? this.getTheme().getButtonBorderColor() : this.borderColor;
+		return this.getTheme().getColor("button.borderColor", this.borderColor);
 	}
 	
 	public void setBorderColor(Color borderColor) {
@@ -186,7 +186,7 @@ public class UIButton extends UITextComponent {
 	}
 	
 	public Color getColor() {
-		return this.color == null && this.getTheme() != null ? this.getTheme().getButtonColor() : this.color;
+		return this.getTheme().getColor("button.color", this.color);
 	}
 	
 	public void setColor(Color color) {
@@ -194,7 +194,7 @@ public class UIButton extends UITextComponent {
 	}
 	
 	public Color getHoverColor() {
-		return this.hoverColor == null && this.getTheme() != null ? this.getTheme().getButtonHoverColor() : this.hoverColor;
+		return this.getTheme().getColor("button.hoverColor", this.hoverColor);
 	}
 	
 	public void setHoverColor(Color hoverColor) {
@@ -202,7 +202,7 @@ public class UIButton extends UITextComponent {
 	}
 	
 	public Color getPressedColor() {
-		return this.pressedColor == null && this.getTheme() != null ? this.getTheme().getButtonPressedColor() : this.pressedColor;
+		return this.getTheme().getColor("button.pressedColor", this.pressedColor);
 	}
 	
 	public void setPressedColor(Color pressedColor) {

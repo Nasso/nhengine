@@ -12,12 +12,6 @@ import org.lwjgl.system.MemoryUtil;
 import io.github.nasso.nhengine.core.Game;
 import io.github.nasso.nhengine.data.StaticLatin1Font;
 import io.github.nasso.nhengine.graphics.FontFamily.FontStyle;
-import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewFontDialog;
-import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewObjectDialog;
-import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewRoomDialog;
-import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewScriptDialog;
-import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewSoundDialog;
-import io.github.nasso.nhengine.tools.nhstudio.dialogs.NewSpriteDialog;
 import io.github.nasso.nhengine.ui.UICanvas;
 import io.github.nasso.nhengine.ui.UIComponent;
 import io.github.nasso.nhengine.ui.UIContainer;
@@ -27,10 +21,8 @@ import io.github.nasso.nhengine.ui.control.UIMenu;
 import io.github.nasso.nhengine.ui.control.UIMenuBar;
 import io.github.nasso.nhengine.ui.control.UIMenuItem;
 import io.github.nasso.nhengine.ui.control.UIMenuSeparator;
-import io.github.nasso.nhengine.ui.control.UIPopupMenu;
 import io.github.nasso.nhengine.ui.control.UIScrollPane;
 import io.github.nasso.nhengine.ui.control.UIScrollPane.BarPolicy;
-import io.github.nasso.nhengine.ui.control.UISeparator;
 import io.github.nasso.nhengine.ui.control.UITabbedPane;
 import io.github.nasso.nhengine.ui.layout.UIBorderLayout;
 import io.github.nasso.nhengine.ui.layout.UIBoxLayout;
@@ -41,24 +33,7 @@ public class NhStudioApp {
 	
 	private UITabbedPane tabs = new UITabbedPane();
 	
-	private NewRoomDialog newRoomDialog;
-	private NewObjectDialog newObjectDialog;
-	private NewSpriteDialog newSpriteDialog;
-	private NewSoundDialog newSoundDialog;
-	private NewFontDialog newFontDialog;
-	private NewScriptDialog newScriptDialog;
-	
-	private UIContainer roomListContentPane, objectListContentPane,
-			spriteListContentPane, soundListContentPane, fontListContentPane,
-			scriptListContentPane;
-	
 	public void start(UICanvas cvs) {
-		this.newRoomDialog = new NewRoomDialog(this);
-		this.newObjectDialog = new NewObjectDialog(this);
-		this.newSpriteDialog = new NewSpriteDialog(this);
-		this.newSoundDialog = new NewSoundDialog(this);
-		this.newFontDialog = new NewFontDialog(this);
-		this.newScriptDialog = new NewScriptDialog(this);
 		this.cvs = cvs;
 		
 		this.createUI(this.cvs.getRootPane());
@@ -161,23 +136,7 @@ public class NhStudioApp {
 		}
 	}
 	
-	private UIContainer createListContentPane() {
-		UIContainer c = new UIContainer(new UIBoxLayout());
-		c.setPadding(0, 0, 0, 16);
-		return c;
-	}
-	
-	private UIContainer buildItemList(String name, UIContainer contentPane) {
-		UIContainer c = new UIContainer(new UIBoxLayout());
-		c.add(new UILabel(name, UILabel.ANCHOR_LEFT, FontStyle.MEDIUM_ITALIC));
-		c.add(contentPane);
-		c.add(new UISeparator(4));
-		
-		return c;
-	}
-	
 	private void createUI(UIRootPane root) {
-		// @format:off
 		root.setMenuBar(new UIMenuBar(new UIMenuItem[] {
 				new UIMenu("File", new UIMenuItem[] {
 						new UIMenuItem("New Project"),	
@@ -189,7 +148,6 @@ public class NhStudioApp {
 						})
 				}),
 		}));
-		// @format:on
 		
 		UIContainer content = root.getContentPane();
 		content.setLayout(new UIBorderLayout());
@@ -197,75 +155,7 @@ public class NhStudioApp {
 		UIContainer dataBrowser = new UIContainer(new UIBoxLayout(UIBoxLayout.VERTICAL, 16));
 		dataBrowser.setPadding(16);
 		
-		// @format:off
 		// Rooms
-		this.roomListContentPane = this.createListContentPane();
-		UIContainer roomsSection = this.buildItemList("Rooms", this.roomListContentPane);
-		
-		roomsSection.setPopupMenu(new UIPopupMenu(new UIMenuItem[] {
-				new UIMenuItem("Add new", (item) -> {
-					this.newRoomDialog.open(root);
-				})
-		}));
-
-		// Objects
-		this.objectListContentPane = this.createListContentPane();
-		UIContainer objectsSection = this.buildItemList("Objects", this.objectListContentPane);
-		
-		objectsSection.setPopupMenu(new UIPopupMenu(new UIMenuItem[] {
-				new UIMenuItem("Add new", (item) -> {
-					this.newObjectDialog.open(root);
-				})
-		}));
-
-		// Sprites
-		this.spriteListContentPane = this.createListContentPane();
-		UIContainer spritesSection = this.buildItemList("Sprites", this.spriteListContentPane);
-		
-		spritesSection.setPopupMenu(new UIPopupMenu(new UIMenuItem[] {
-				new UIMenuItem("Add new", (item) -> {
-					this.newSpriteDialog.open(root);
-				})
-		}));
-
-		// Sounds
-		this.soundListContentPane = this.createListContentPane();
-		UIContainer soundsSection = this.buildItemList("Sounds", this.soundListContentPane);
-		
-		soundsSection.setPopupMenu(new UIPopupMenu(new UIMenuItem[] {
-				new UIMenuItem("Add new", (item) -> {
-					this.newSoundDialog.open(root);
-				})
-		}));
-
-		// Fonts
-		this.fontListContentPane = this.createListContentPane();
-		UIContainer fontsSection = this.buildItemList("Fonts", this.fontListContentPane);
-		
-		fontsSection.setPopupMenu(new UIPopupMenu(new UIMenuItem[] {
-				new UIMenuItem("Add new", (item) -> {
-					this.newFontDialog.open(root);
-				})
-		}));
-
-		// Scripts
-		this.scriptListContentPane = this.createListContentPane();
-		UIContainer scriptsSection = this.buildItemList("Scripts", this.scriptListContentPane);
-		
-		scriptsSection.setPopupMenu(new UIPopupMenu(new UIMenuItem[] {
-				new UIMenuItem("Add new", (item) -> {
-					this.newScriptDialog.open(root);
-				})
-		}));
-		// @format:on
-		
-		dataBrowser.add(roomsSection);
-		dataBrowser.add(objectsSection);
-		dataBrowser.add(spritesSection);
-		dataBrowser.add(soundsSection);
-		dataBrowser.add(fontsSection);
-		dataBrowser.add(scriptsSection);
-		
 		content.add(new UIScrollPane(dataBrowser, BarPolicy.DISABLED, BarPolicy.ALWAYS_VISIBLE), UIBorderLayout.WEST);
 		
 		this.tabs.setPadding(8);

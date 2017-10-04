@@ -13,7 +13,10 @@ import io.github.nasso.nhengine.utils.FloatTransition;
 import io.github.nasso.nhengine.utils.Nhutils;
 
 public class UIDialog {
-	private class CloseButton extends UIComponent {
+	public class CloseButton extends UIComponent {
+		private Color color, hoverColor, pressedColor;
+		private float borderRadius = USE_THEME_VALUE;
+		
 		private FloatTransition hoverTransition = new FloatTransition(0.1f, this::setTransitionValue, 0);
 		private FloatTransition pressTransition = new FloatTransition(0.1f, this::setTransitionValue, 0);
 		
@@ -61,11 +64,23 @@ public class UIDialog {
 			if(button == Nhengine.MOUSE_BUTTON_LEFT) UIDialog.this.close();
 			return true;
 		}
+
+		public Color getColor() {
+			return this.getTheme().getColor("dialog.closeButton.color", this.color);
+		}
+
+		public Color getHoverColor() {
+			return this.getTheme().getColor("dialog.closeButton.hoverColor", this.hoverColor);
+		}
+
+		public Color getPressedColor() {
+			return this.getTheme().getColor("dialog.closeButton.pressedColor", this.pressedColor);
+		}
 		
 		private void updateColor() {
-			Color normal = this.getTheme().getDialogCloseButtonColor();
-			Color hover = this.getTheme().getDialogCloseButtonHoverColor();
-			Color pressed = this.getTheme().getDialogCloseButtonPressedColor();
+			Color normal = this.getColor();
+			Color hover = this.getHoverColor();
+			Color pressed = this.getPressedColor();
 			
 			Nhutils.colorBlend(normal, hover, this.hoverTransition.getValue(), this._rgba);
 			Nhutils.colorBlend(this._rgba, pressed, this.pressTransition.getValue(), this._rgba);
@@ -80,7 +95,7 @@ public class UIDialog {
 			this.updateColor();
 			
 			gtx.setFill(this._rgba);
-			gtx.fillRoundedRect(0, 0, this.getWidth(), this.getHeight(), this.getTheme().getDialogCloseButtonBorderRadius());
+			gtx.fillRoundedRect(0, 0, this.getWidth(), this.getHeight(), this.getBorderRadius());
 			
 			gtx.setStroke(this.getTextColor());
 			gtx.beginPath();
@@ -93,6 +108,25 @@ public class UIDialog {
 		
 		public void computePreferredSize() {
 			this.preferredSize.set(18);
+		}
+
+		public void setColor(Color color) {
+			this.color = color;
+		}
+
+		public void setHoverColor(Color hoverColor) {
+			this.hoverColor = hoverColor;
+		}
+		public void setPressedColor(Color pressedColor) {
+			this.pressedColor = pressedColor;
+		}
+
+		public float getBorderRadius() {
+			return this.getTheme().getFloat("dialog.closeButton.borderRadius", this.borderRadius);
+		}
+
+		public void setBorderRadius(float borderRadius) {
+			this.borderRadius = borderRadius;
 		}
 	}
 	
@@ -139,7 +173,7 @@ public class UIDialog {
 		}
 		
 		public Color getBackground() {
-			return this.background == null && this.getTheme() != null ? this.getTheme().getDialogTitleBarColor() : super.getBackground();
+			return this.getTheme().getColor("dialog.titleBar.background", super.background);
 		}
 	}
 	
@@ -156,12 +190,14 @@ public class UIDialog {
 		}
 		
 		public Color getBackground() {
-			return this.background == null && this.getTheme() != null ? this.getTheme().getDialogTitleBarColor() : super.getBackground();
+			return this.getTheme().getColor("dialog.titleBar.background", super.background);
 		}
 	}
 	
 	DialogueChrome chrome = new DialogueChrome();
 	private UIRootPane openedOnRoot = null;
+	
+	private Color modalFocusColor;
 	
 	private float titleBarHeight = UIComponent.USE_THEME_VALUE;
 	
@@ -231,7 +267,7 @@ public class UIDialog {
 	}
 	
 	public float getTitleBarHeight() {
-		return Float.isNaN(this.titleBarHeight) && this.chrome.getTheme() != null ? this.chrome.getTheme().getDialogTitleBarHeight() : this.titleBarHeight;
+		return this.chrome.getTheme().getFloat("dialog.titleBar.height", this.titleBarHeight);
 	}
 	
 	public void setTitleBarHeight(float titleBarHeight) {
@@ -240,5 +276,13 @@ public class UIDialog {
 	
 	public boolean isShown() {
 		return this.chrome.isEffectivelyVisible();
+	}
+
+	public Color getModalFocusColor() {
+		return this.modalFocusColor;
+	}
+
+	public void setModalFocusColor(Color modalFocusColor) {
+		this.modalFocusColor = modalFocusColor;
 	}
 }

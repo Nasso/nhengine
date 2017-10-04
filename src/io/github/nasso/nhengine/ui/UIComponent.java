@@ -29,7 +29,7 @@ public abstract class UIComponent {
 	public static final int ANCHOR_BOTTOM = 7;
 	public static final int ANCHOR_BOTTOM_RIGHT = 8;
 	
-	public static final float USE_THEME_VALUE = Float.NaN;
+	public static final float USE_THEME_VALUE = UITheme.USE_THEME_VALUE;
 	
 	protected UIContainer parent;
 	
@@ -196,7 +196,7 @@ public abstract class UIComponent {
 	}
 	
 	public UITheme getTheme() {
-		if(this.parent == null) return null;
+		if(this.parent == null) return UITheme.DEFAULT_INSTANCE;
 		
 		return this.parent.getTheme();
 	}
@@ -412,7 +412,7 @@ public abstract class UIComponent {
 	}
 	
 	public FontFamily getFontFamily() {
-		return this.fontFamily != null ? this.fontFamily : (this.parent != null ? this.parent.getFontFamily() : (this.getTheme() != null ? this.getTheme().getFontFamily() : null));
+		return this.getTheme().getFontFamily("globalFont", this.fontFamily != null ? this.fontFamily : this.parent != null ? this.parent.getFontFamily() : null);
 	}
 	
 	public void setFontFamily(FontFamily fontFamily) {
@@ -439,7 +439,7 @@ public abstract class UIComponent {
 	}
 	
 	public Color getTextColor() {
-		return this.textColor == null && this.getTheme() != null ? this.getTheme().getTextColor() : this.textColor;
+		return this.getTheme().getColor("text.color", this.textColor);
 	}
 	
 	public void setTextColor(Color textColor) {

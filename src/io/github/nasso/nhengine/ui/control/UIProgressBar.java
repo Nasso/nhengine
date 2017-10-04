@@ -51,7 +51,7 @@ public class UIProgressBar extends UIComponent {
 	}
 	
 	public float getBorderRadius() {
-		return Float.isNaN(this.borderRadius) && this.getTheme() != null ? this.getTheme().getProgressBarBorderRadius() : this.borderRadius;
+		return this.getTheme().getFloat("progressBar.borderRadius", this.borderRadius);
 	}
 	
 	public void setBorderRadius(float rad) {
@@ -69,11 +69,11 @@ public class UIProgressBar extends UIComponent {
 	}
 	
 	public Color getForeground() {
-		return this.foreground == null && this.getTheme() != null ? this.getTheme().getProgressBarForegroundColor() : this.foreground;
+		return this.getTheme().getColor("progressBar.foreground", this.foreground);
 	}
 	
 	public Color getBackground() {
-		return this.background == null && this.getTheme() != null ? this.getTheme().getProgressBarBackgroundColor() : this.background;
+		return this.getTheme().getColor("progressBar.background", this.background);
 	}
 	
 	public void setForeground(Color foreground) {
