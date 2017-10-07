@@ -20,13 +20,16 @@ public class TileMapComponent extends DrawableComponent {
 	public static class TileSet {
 		private Texture2D texture;
 		private int columns, rows;
+		private int tilewidth, tileheight;
 		
 		private int firstgid;
 		
-		private TileSet(Texture2D texture, int cols, int rows, int firstgid) {
+		private TileSet(Texture2D texture, int cols, int rows, int tilewidth, int tileheight, int firstgid) {
 			this.texture = texture;
 			this.columns = cols;
 			this.rows = rows;
+			this.tilewidth = tilewidth;
+			this.tileheight = tileheight;
 			
 			this.firstgid = firstgid;
 		}
@@ -37,6 +40,20 @@ public class TileMapComponent extends DrawableComponent {
 		 */
 		public boolean containsGlobalID(int id) {
 			return id >= 0 && id < this.getTileCount();
+		}
+		
+		/**
+		 * @return The display width of one tile in this tileset.
+		 */
+		public int getTileWidth() {
+			return this.tilewidth;
+		}
+
+		/**
+		 * @return The display height of one tile in this tileset.
+		 */
+		public int getTileHeight() {
+			return this.tileheight;
 		}
 		
 		/**
@@ -285,7 +302,7 @@ public class TileMapComponent extends DrawableComponent {
 	 * @param rows The number of rows in the tile-set.
 	 * @return The created tile-set object.
 	 */
-	public TileSet createTileSet(Texture2D tex, int cols, int rows) {
+	public TileSet createTileSet(Texture2D tex, int cols, int rows, int tilewidth, int tileheight) {
 		int firstgid = 0;
 		
 		if(!this.tilesets.isEmpty()) {
@@ -293,7 +310,7 @@ public class TileMapComponent extends DrawableComponent {
 			firstgid = previous.firstgid + previous.getTileCount();
 		}
 		
-		TileSet set = new TileSet(tex, cols, rows, firstgid);
+		TileSet set = new TileSet(tex, cols, rows, tilewidth, tileheight, firstgid);
 		this.tilesets.add(set);
 		
 		return set;

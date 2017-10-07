@@ -63,7 +63,7 @@ public class OGLTileMapRenderer extends OGLComponentRenderer<TileMapComponent> {
 		this.program.use();
 		this.program.loadToUniform("tileWidthHeightDepth", comp.getCellWidth(), comp.getCellHeight(), comp.getWorldDepth());
 		this.program.loadToUniform("model", comp.getWorldMatrix(true));
-		this.program.loadToUniform("isometric", comp.isIsometric());
+		this.program.loadToUniform("isometric", comp.isIsometric() && false);
 		
 		this.program.loadToUniform("projView", cam.getProjViewMatrix(true));
 		
@@ -73,6 +73,7 @@ public class OGLTileMapRenderer extends OGLComponentRenderer<TileMapComponent> {
 			TileSet tileset = comp.getTileSet(tilesetID);
 			
 			this.program.loadToUniform("tilesetSize", tileset.getColumns(), tileset.getRows());
+			this.program.loadToUniform("tileSetWidthHeight", tileset.getTileWidth(), tileset.getTileHeight());
 			this.program.loadToUniform("diffuseTexture", OGLTextures.get().update(tileset.getTexture()), 0);
 			
 			for(int layerID = 0; layerID < comp.getLayerCount(); layerID++) {

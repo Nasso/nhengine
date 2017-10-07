@@ -10,6 +10,6 @@ public class OGLTileMapProgram extends OGLProgram {
 		
 		this.link();
 		
-		this.loadUniforms("tilesetSize", "tileWidthHeightDepth", "opacity", "model", "isometric", "diffuseTexture", "projView");
+		this.loadUniforms("tilesetSize", "tileWidthHeightDepth", "tileSetWidthHeight", "opacity", "model", "isometric", "diffuseTexture", "projView");
 	}
 }

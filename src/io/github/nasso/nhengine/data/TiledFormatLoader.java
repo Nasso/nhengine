@@ -24,6 +24,8 @@ public class TiledFormatLoader {
 		int columns;
 		int tilecount;
 		
+		int tilewidth, tileheight;
+		
 		int firstgid;
 		
 		public boolean containsGlobalID(int id) {
@@ -75,7 +77,9 @@ public class TiledFormatLoader {
 			tMap.createTileSet(
 					TextureIO.loadTexture2D(mapFilePath.getParent().resolve(tileSetDef.image).toString(), 4, false, false, false, inJar),
 					tileSetDef.columns,
-					tileSetDef.tilecount / tileSetDef.columns
+					tileSetDef.tilecount / tileSetDef.columns,
+					tileSetDef.tilewidth,
+					tileSetDef.tileheight
 			);
 		}
 		
