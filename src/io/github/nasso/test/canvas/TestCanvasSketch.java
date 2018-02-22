@@ -14,6 +14,8 @@ import io.github.nasso.nhengine.graphics.TextBaseline;
 import io.github.nasso.nhengine.graphics.Texture2D;
 import io.github.nasso.nhengine.utils.Nhutils;
 import io.github.nasso.nhengine.utils.easing.CubicBezierEasing;
+import io.github.nasso.nhengine.utils.easing.EasingFunction;
+import penner.easing.Sine;
 
 public class TestCanvasSketch {
 	private float time = 0;
@@ -29,6 +31,7 @@ public class TestCanvasSketch {
 	private ScalableVectorGraphics[] svgList = new ScalableVectorGraphics[EMOJI_CODES.length];
 	
 	private CubicBezierEasing easing = new CubicBezierEasing(0.42f, 0.0f, 0.58f, 1.0f);
+	private EasingFunction easing2 = Sine::easeInOut;
 	
 	public void setup() {
 		
@@ -107,7 +110,7 @@ public class TestCanvasSketch {
 		
 		gtx.save();
 		{
-			gtx.translate(300 + ((float) Math.cos(this.time * 2)) * 100, 100);
+			gtx.translate(300 + ((float) Math.cos(this.time * 2)) * 100, 20);
 			
 			gtx.setStroke(Color.RED);
 			gtx.strokeRect(50, 50, 100, 100);
@@ -167,6 +170,39 @@ public class TestCanvasSketch {
 			gtx.beginPath();
 			gtx.moveTo(0, 0);
 			gtx.bezierTo(this.easing.x1, this.easing.y1, this.easing.x2, this.easing.y2, 1, 1);
+			gtx.stroke();
+			
+			gtx.setStroke(1, 0, 0);
+			gtx.beginPath();
+			gtx.moveTo(0, y);
+			gtx.lineTo(1, y);
+			gtx.moveTo(x, 0);
+			gtx.lineTo(x, 1);
+			gtx.stroke();
+		}
+		gtx.restore();
+		
+		gtx.save();
+		{
+			gtx.setStroke(0, 0, 0);
+			gtx.setStrokeSize(0.02f);
+			
+			gtx.translate(400, 350);
+			gtx.scale(120, -120);
+			
+			float t = this.time % 4f / 4f * 2;
+			t = t > 1 ? 1 - t + 1 : t;
+			
+			float x = t;
+			float y = this.easing2.apply(t, 0, 1, 1);
+			
+			gtx.beginPath();
+			for(int i = 0; i < 100; i++) {
+				float iy = this.easing2.apply(i / 100.0f, 0, 1, 1);
+				
+				if(i == 0) gtx.moveTo(i / 100.0f, iy);
+				else gtx.lineTo(i / 100.0f, iy);
+			}
 			gtx.stroke();
 			
 			gtx.setStroke(1, 0, 0);
